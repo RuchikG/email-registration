@@ -28,6 +28,9 @@ public class ConfirmationToken {
         confirmationToken = UUID.randomUUID().toString();
     }
 
+    public ConfirmationToken() {
+    }
+
     public long getTokenid() {
         return tokenid;
     }
