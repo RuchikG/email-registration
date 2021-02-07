@@ -28,14 +28,14 @@
                     <td><label for="password">Password</label></td>
                     <td><input th:field="*{password}" type="text" name="password"></td>
                 </tr>
-                <!--<tr>
+                <tr>
                     <td><label for="roles">Role</label></td>
                     <td><select th:field="*{roles}" name="roles">
-                        <option value="Student">Student</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Root">Root</option>
+                        <option th:value="STUDENT" th:text="STUDENT"></option>
+                        <option th:value="ADMIN" th:text="ADMIN"></option>
+                        <option th:value="ROOT" th:text="ROOT"></option>
                     </select></td>
-                </tr>-->
+                </tr>
                 <tr>
                     <td><input type="reset" value="Clear"/></td>
                     <td><input type="submit" value="Submit" /></td>
