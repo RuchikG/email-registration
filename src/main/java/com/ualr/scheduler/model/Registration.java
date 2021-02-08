@@ -91,4 +91,9 @@ public class Registration {
     public void setRoles(String roles) {
         this.roles = roles;
     }
+
+    public Registration(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
 }
