@@ -8,6 +8,7 @@ import com.ualr.scheduler.service.EmailSenderService;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -76,6 +77,13 @@ public class RegistrationAccountController {
             modelAndView.addObject("message","The link is invalid or broken");
             modelAndView.setViewName("error");
         }
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/student",method = RequestMethod.GET)
+    @PreAuthorize("hasRole('STUDENT')")
+    public ModelAndView studentPage(ModelAndView modelAndView){
+        modelAndView.setViewName("student");
         return modelAndView;
     }
 
