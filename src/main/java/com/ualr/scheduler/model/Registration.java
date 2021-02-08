@@ -92,8 +92,7 @@ public class Registration {
         this.roles = roles;
     }
 
-    public Registration(String username, String password){
-        this.username = username;
-        this.password = password;
+    public Registration(){
+
     }
 }
