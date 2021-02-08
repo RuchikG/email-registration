@@ -41,9 +41,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(4);
-    }
+    
 }
