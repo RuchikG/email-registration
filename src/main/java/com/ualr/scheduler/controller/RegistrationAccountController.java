@@ -99,7 +99,7 @@ public class RegistrationAccountController {
                               @RequestParam("password") String password,
                               HttpSession httpSession, ModelMap modelMap){
         Registration user = registrationRepository.findByUsernameIgnoreCase(username);
-        if ((user != null) && (user.getPassword().equals(password)) && (user.getRoles().equals("STUDENT"))){
+        if ((user != null) && (user.getPassword().equals(passwordEncoder.encode(password))) && (user.getRoles().equals("STUDENT"))){
             httpSession.setAttribute("username",username);
             return "/student";
         } else {
