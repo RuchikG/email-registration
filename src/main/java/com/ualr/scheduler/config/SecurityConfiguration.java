@@ -36,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/confirm").permitAll()
-                .antMatchers("/student").permitAll()
+                .antMatchers("/student").hasRole("STUDENT")
                 .anyRequest().authenticated().and()
                 .formLogin().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
