@@ -16,6 +16,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/confirm").permitAll()
                 .antMatchers("/student").hasRole("STUDENT")
                 .anyRequest().authenticated().and()
-                .httpBasic();
+                .formLogin();
     }
 }
