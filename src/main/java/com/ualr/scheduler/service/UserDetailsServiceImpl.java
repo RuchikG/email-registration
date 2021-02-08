@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         if (registration != null){
-            return new User(registration.getUsername(),registration.getPassword(), buildSimpleGrantedAuthorities(registration.getRoles()));
+            return new User(registration.getUsername(), new BCryptPasswordEncoder(4).encode(registration.getPassword()), buildSimpleGrantedAuthorities(registration.getRoles()));
         } else {
             throw new UsernameNotFoundException("No user found with username: " + username);
         }
