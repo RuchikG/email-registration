@@ -11,10 +11,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class RegistrationAccountController {
@@ -89,6 +92,19 @@ public class RegistrationAccountController {
     public ModelAndView studentPage(ModelAndView modelAndView){
         modelAndView.setViewName("student");
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    public String login(@RequestParam("username") String username,
+                              @RequestParam("password") String password,
+                              HttpSession httpSession, ModelMap modelMap){
+        Registration user = registrationRepository.findByUsernameIgnoreCase(username);
+        if ((user != null) && (user.getPassword().equals(password)) && (user.getRoles().equals("STUDENT"))){
+            httpSession.setAttribute("username",username);
+            return "/student";
+        } else {
+            return "/login";
+        }
     }
 
     public RegistrationRepository getRegistrationRepository() {
