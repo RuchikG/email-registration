@@ -50,7 +50,6 @@ public class RegistrationAccountController {
             modelAndView.addObject("message","This username already exists! If that is you please login");
             modelAndView.setViewName("error");
         } else {
-            registration.setPassword(passwordEncoder.encode(registration.getPassword()));
             registrationRepository.save(registration);
 
             ConfirmationToken confirmationToken = new ConfirmationToken(registration);
