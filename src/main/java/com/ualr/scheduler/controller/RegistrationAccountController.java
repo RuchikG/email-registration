@@ -81,7 +81,6 @@ public class RegistrationAccountController {
     }
 
     @RequestMapping(value = "/student",method = RequestMethod.GET)
-    @PreAuthorize("hasRole('STUDENT')")
     public ModelAndView studentPage(ModelAndView modelAndView){
         modelAndView.setViewName("student");
         return modelAndView;

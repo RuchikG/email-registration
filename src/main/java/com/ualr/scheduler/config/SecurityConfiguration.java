@@ -41,5 +41,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-    
+
 }
