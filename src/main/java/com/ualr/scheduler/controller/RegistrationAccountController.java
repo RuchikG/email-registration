@@ -9,6 +9,7 @@ import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +21,9 @@ public class RegistrationAccountController {
 
     @Autowired
     private RegistrationRepository registrationRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ConfirmationTokenRepository confirmationTokenRepository;
@@ -43,6 +47,7 @@ public class RegistrationAccountController {
             modelAndView.addObject("message","This username already exists! If that is you please login");
             modelAndView.setViewName("error");
         } else {
+            registration.setPassword(passwordEncoder.encode(registration.getPassword()));
             registrationRepository.save(registration);
 
             ConfirmationToken confirmationToken = new ConfirmationToken(registration);
