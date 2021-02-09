@@ -65,9 +65,9 @@ public class RegistrationAccountController {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setTo(registration.getEmailId());
             mailMessage.setSubject("Complete Registration!");
-            mailMessage.setFrom("ruchikgabhawala@gmail.com");
+            mailMessage.setFrom("ruchikgabha@gmail.com");
             mailMessage.setText("To confirm your account, please click here: " + "https://email-registration.herokuapp.com/confirm-account?token="+confirmationToken.getConfirmationToken());
-            mailMessage.setReplyTo("ruchikgabhawala@gmail.com");
+            mailMessage.setReplyTo("ruchikgabha@gmail.com");
 
             emailSenderService.sendEmail(mailMessage);
 
