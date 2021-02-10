@@ -54,8 +54,8 @@ public class RegistrationAccountController {
         } else {
             SecureRandom random = new SecureRandom();
             SecureRandom secureRandom = new SecureRandom(random.generateSeed(10));
-
-            registration.setPassword(new BCryptPasswordEncoder(4,secureRandom).encode(registration.getPassword()));
+            String password = new BCryptPasswordEncoder(4,secureRandom).encode(registration.getPassword());
+            registration.setPassword(password);
             registrationRepository.save(registration);
 
             ConfirmationToken confirmationToken = new ConfirmationToken(registration);
