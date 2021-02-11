@@ -1,25 +1,22 @@
 package com.ualr.scheduler.controller;
 
-import com.ualr.scheduler.model.ConfirmationToken;
 import com.ualr.scheduler.model.Registration;
-import com.ualr.scheduler.repository.ConfirmationTokenRepository;
 import com.ualr.scheduler.repository.RegistrationRepository;
 import com.ualr.scheduler.service.EmailSenderService;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import java.security.SecureRandom;
+import java.util.Date;
+import java.util.UUID;
 
 @Controller
 public class RegistrationAccountController {
@@ -29,9 +26,6 @@ public class RegistrationAccountController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private ConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
     private EmailSenderService emailSenderService;
@@ -56,17 +50,14 @@ public class RegistrationAccountController {
             SecureRandom secureRandom = new SecureRandom(random.generateSeed(10));
             String password = new BCryptPasswordEncoder(4,secureRandom).encode(registration.getPassword());
             registration.setPassword(password);
+            registration.setConfirmationToken(UUID.randomUUID().toString());
             registrationRepository.save(registration);
-
-            ConfirmationToken confirmationToken = new ConfirmationToken(registration);
-
-            confirmationTokenRepository.save(confirmationToken);
 
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setTo(registration.getEmailId());
             mailMessage.setSubject("Complete Registration!");
             mailMessage.setFrom("ruchikgabha@gmail.com");
-            mailMessage.setText("To confirm your account, please click here: " + "https://email-registration.herokuapp.com/confirm-account?token="+confirmationToken.getConfirmationToken());
+            mailMessage.setText("To confirm your account, please click here: " + "https://email-registration.herokuapp.com/confirm-account?token="+registration.getConfirmationToken());
             mailMessage.setReplyTo("ruchikgabha@gmail.com");
 
             emailSenderService.sendEmail(mailMessage);
@@ -79,12 +70,12 @@ public class RegistrationAccountController {
 
     @RequestMapping(value = "/confirm-account", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken){
-        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+        Registration token = registrationRepository.findByConfirmationToken(confirmationToken);
 
         if(token != null){
-            Registration registration = registrationRepository.findByUsernameIgnoreCase(token.getRegistration().getUsername());
-            registration.setEnabled(true);
-            registrationRepository.save(registration);
+            token.setEnabled(true);
+            token.setConfirmationDate(new Date());
+            registrationRepository.save(token);
             modelAndView.setViewName("accountVerified");
         } else {
             modelAndView.addObject("message","The link is invalid or broken");
@@ -93,6 +84,7 @@ public class RegistrationAccountController {
         return modelAndView;
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/student",method = RequestMethod.GET)
     public ModelAndView studentPage(ModelAndView modelAndView){
         modelAndView.setViewName("student");
@@ -105,14 +97,6 @@ public class RegistrationAccountController {
 
     public void setRegistrationRepository(RegistrationRepository registrationRepository) {
         this.registrationRepository = registrationRepository;
-    }
-
-    public ConfirmationTokenRepository getConfirmationTokenRepository() {
-        return confirmationTokenRepository;
-    }
-
-    public void setConfirmationTokenRepository(ConfirmationTokenRepository confirmationTokenRepository) {
-        this.confirmationTokenRepository = confirmationTokenRepository;
     }
 
     public EmailSenderService getEmailSenderService() {

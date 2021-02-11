@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository()
 public interface RegistrationRepository extends CrudRepository<Registration, String> {
     Registration findByUsernameIgnoreCase(String username);
+    Registration findByConfirmationToken(String confirmationToken);
 }
