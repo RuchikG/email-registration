@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -30,7 +31,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             authorityList.add(new SimpleGrantedAuthority("Test"));
             User user = new User("test","test",authorityList);
             user.getAuthorities().add(buildSimpleGrantedAuthorities(registration.getRoles()));
-            return new User(registration.getUsername(),registration.getPassword(),user.getAuthorities());
+            UserDetails userDetails = (UserDetails)new User(registration.getUsername(),registration.getPassword(), user.getAuthorities());
+            return userDetails;
         } else {
             throw new UsernameNotFoundException("No user found with username: " + username);
         }
