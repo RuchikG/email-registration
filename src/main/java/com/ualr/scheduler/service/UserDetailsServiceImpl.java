@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         if (registration != null){
             List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-            User user = new User("","",authorityList);
+            User user = new User("test","test",authorityList);
             user.getAuthorities().add(buildSimpleGrantedAuthorities(registration.getRoles()));
             return new User(registration.getUsername(),registration.getPassword(),user.getAuthorities());
         } else {
