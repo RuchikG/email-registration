@@ -26,25 +26,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         if (registration != null){
-            return new User(registration.getUsername(), registration.getPassword(), buildSimpleGrantedAuthorities(registration.getRoles()));
+            List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+            User user = new User("","",authorityList);
+            user.getAuthorities().add(buildSimpleGrantedAuthorities(registration.getRoles()));
+            return new User(registration.getUsername(),registration.getPassword(),user.getAuthorities());
         } else {
             throw new UsernameNotFoundException("No user found with username: " + username);
         }
     }
 
-    private static List<SimpleGrantedAuthority> buildSimpleGrantedAuthorities(String roles){
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    private static SimpleGrantedAuthority buildSimpleGrantedAuthorities(String roles){
         switch (roles) {
             case ("STUDENT"):
-                authorities.add(new SimpleGrantedAuthority("STUDENT"));
-                break;
+                return new SimpleGrantedAuthority("STUDENT");
             case ("ADMIN"):
-                authorities.add(new SimpleGrantedAuthority("ADMIN"));
-                break;
+                return new SimpleGrantedAuthority("ADMIN");
             case ("ROOT"):
-                authorities.add(new SimpleGrantedAuthority("ROOT"));
-                break;
+                return new SimpleGrantedAuthority("ROOT");
         }
-        return authorities;
+        return null;
     }
 }
