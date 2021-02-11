@@ -29,9 +29,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (registration != null){
             List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
             authorityList.add(new SimpleGrantedAuthority("Test"));
-            User user = new User("test","test",authorityList);
-            user.getAuthorities().add(buildSimpleGrantedAuthorities(registration.getRoles()));
-            UserDetails userDetails = (UserDetails)new User(registration.getUsername(),registration.getPassword(), user.getAuthorities());
+            authorityList.add(buildSimpleGrantedAuthorities(registration.getRoles()));
+            UserDetails userDetails = (UserDetails)new User(registration.getUsername(),registration.getPassword(), authorityList);
             return userDetails;
         } else {
             throw new UsernameNotFoundException("No user found with username: " + username);
