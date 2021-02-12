@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Controller
-public class RegistrationAccountController {
+public class RegistrationController {
 
     @Autowired
     private RegistrationRepository registrationRepository;
@@ -81,13 +81,6 @@ public class RegistrationAccountController {
             modelAndView.addObject("message","The link is invalid or broken");
             modelAndView.setViewName("error");
         }
-        return modelAndView;
-    }
-
-    @PreAuthorize("hasAnyRole('STUDENT')")
-    @RequestMapping(value = "/student",method = RequestMethod.GET)
-    public ModelAndView studentPage(ModelAndView modelAndView){
-        modelAndView.setViewName("student");
         return modelAndView;
     }
 
