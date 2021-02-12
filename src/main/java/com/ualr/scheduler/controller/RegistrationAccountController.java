@@ -46,13 +46,7 @@ public class RegistrationAccountController {
             modelAndView.addObject("message","This username already exists! If that is you please login");
             modelAndView.setViewName("error");
         } else {
-            SecureRandom random = new SecureRandom();
-            SecureRandom secureRandom = new SecureRandom(random.generateSeed(10));
-            String password = new BCryptPasswordEncoder(4,secureRandom).encode(registration.getPassword());
-            registration.setPassword(password);
             registration.setConfirmationToken(UUID.randomUUID().toString());
-            registrationRepository.save(registration);
-
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setTo(registration.getEmailId());
             mailMessage.setSubject("Complete Registration!");
@@ -61,6 +55,12 @@ public class RegistrationAccountController {
             mailMessage.setReplyTo("ruchikgabha@gmail.com");
 
             emailSenderService.sendEmail(mailMessage);
+
+            SecureRandom random = new SecureRandom();
+            SecureRandom secureRandom = new SecureRandom(random.generateSeed(10));
+            String password = new BCryptPasswordEncoder(4,secureRandom).encode(registration.getPassword());
+            registration.setPassword(password);
+            registrationRepository.save(registration);
 
             modelAndView.addObject("emailId",registration.getEmailId());
             modelAndView.setViewName("successfulRegistration");

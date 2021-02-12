@@ -1,9 +1,7 @@
 package com.ualr.scheduler.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class Registration {
