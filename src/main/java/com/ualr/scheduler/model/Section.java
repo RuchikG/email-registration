@@ -16,7 +16,7 @@ public class Section {
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "course_number", nullable = false)
-    private Course courses;
+    private Course course;
 
     @Column(name = "instructor")
     private String instructor;
@@ -30,7 +30,7 @@ public class Section {
     public Section(Section sections){
         this.sectionid = sections.getSectionid();
         this.sectionNumber = sections.getSectionNumber();
-        this.courses = sections.getCourses();
+        this.course = sections.getCourses();
         this.instructor = sections.getInstructor();
         this.meetingTimes = sections.getMeetingTimes();
     }
@@ -52,11 +52,11 @@ public class Section {
     }
 
     public Course getCourses() {
-        return courses;
+        return course;
     }
 
     public void setCourses(Course courses) {
-        this.courses = courses;
+        this.course = courses;
     }
 
     public String getInstructor() {
