@@ -22,14 +22,6 @@ public class MeetingTimes {
     public MeetingTimes() {
     }
 
-    public MeetingTimes(MeetingTimes meetingTimes){
-        this.meetingId = meetingTimes.getMeetingId();
-        this.day = meetingTimes.getDay();
-        this.startTime = meetingTimes.getStartTime();
-        this.endTime = meetingTimes.getEndTime();
-        this.sections = meetingTimes.getSections();
-    }
-
     public Long getMeetingId() {
         return meetingId;
     }

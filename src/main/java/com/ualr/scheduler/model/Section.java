@@ -27,14 +27,6 @@ public class Section {
     public Section() {
     }
 
-    public Section(Section sections){
-        this.sectionid = sections.getSectionid();
-        this.sectionNumber = sections.getSectionNumber();
-        this.course = sections.getCourses();
-        this.instructor = sections.getInstructor();
-        this.meetingTimes = sections.getMeetingTimes();
-    }
-
     public Long getSectionid() {
         return sectionid;
     }

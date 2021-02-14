@@ -34,6 +34,9 @@ public class Registration {
             @JoinColumn(name = "course_id",referencedColumnName = "course_id",nullable = false,updatable = false)})
     private Set<Course> designatedCourses;
 
+    @OneToMany(mappedBy = "registration",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private Set<ReservedTime> reservedTimes;
+
     public Registration(Registration registration) {
         this.userid = registration.getUserid();
         this.username = registration.getUsername();
@@ -44,6 +47,7 @@ public class Registration {
         this.confirmationToken = registration.getConfirmationToken();
         this.confirmationDate = registration.getConfirmationDate();
         this.designatedCourses = registration.getDesignatedCourses();
+        this.reservedTimes = registration.getReservedTimes();
     }
 
     public long getUserid() {
@@ -116,6 +120,14 @@ public class Registration {
 
     public void setDesignatedCourses(Set<Course> designatedCourses) {
         this.designatedCourses = designatedCourses;
+    }
+
+    public Set<ReservedTime> getReservedTimes() {
+        return reservedTimes;
+    }
+
+    public void setReservedTimes(Set<ReservedTime> reservedTimes) {
+        this.reservedTimes = reservedTimes;
     }
 
     public Registration(){

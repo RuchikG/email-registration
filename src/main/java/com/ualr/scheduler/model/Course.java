@@ -29,15 +29,6 @@ public class Course {
     public Course() {
     }
 
-    public Course(Course courses){
-        this.courseid = courses.getCourseid();
-        this.courseNumber = courses.getCourseNumber();
-        this.deptId = courses.getDeptId();
-        this.courseTitle = courses.getCourseTitle();
-        this.sections = courses.getSections();
-        this.registrations = courses.getRegistrations();
-    }
-
     public Long getCourseid() {
         return courseid;
     }
