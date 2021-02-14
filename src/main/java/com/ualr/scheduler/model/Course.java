@@ -1,9 +1,10 @@
 package com.ualr.scheduler.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-public class Courses {
+public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +20,18 @@ public class Courses {
     @Column(name = "course_title")
     private String courseTitle;
 
-    public Courses() {
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Section> sections;
+
+    public Course() {
+    }
+
+    public Course(Course courses){
+        this.courseid = courses.getCourseid();
+        this.courseNumber = courses.getCourseNumber();
+        this.deptId = courses.getDeptId();
+        this.courseTitle = courses.getCourseTitle();
+        this.sections = courses.getSections();
     }
 
     public Long getCourseid() {
@@ -52,5 +64,13 @@ public class Courses {
 
     public void setCourseTitle(String courseTitle) {
         this.courseTitle = courseTitle;
+    }
+
+    public Set<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(Set<Section> sections) {
+        this.sections = sections;
     }
 }
