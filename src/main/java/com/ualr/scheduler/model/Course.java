@@ -20,7 +20,7 @@ public class Course {
     @Column(name = "course_title")
     private String courseTitle;
 
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "courses", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Section> sections;
 
     public Course() {

@@ -21,7 +21,7 @@ public class Section {
     @Column(name = "instructor")
     private String instructor;
 
-    @OneToMany(mappedBy = "meetingTime", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sections", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<MeetingTimes> meetingTimes;
 
     public Section() {
