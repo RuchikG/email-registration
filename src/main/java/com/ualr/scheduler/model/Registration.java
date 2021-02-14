@@ -37,6 +37,9 @@ public class Registration {
     @OneToMany(mappedBy = "registration",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<ReservedTime> reservedTimes;
 
+    @OneToMany(mappedBy = "registration",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private Set<Schedule> schedules;
+
     public Registration(Registration registration) {
         this.userid = registration.getUserid();
         this.username = registration.getUsername();
@@ -48,6 +51,7 @@ public class Registration {
         this.confirmationDate = registration.getConfirmationDate();
         this.designatedCourses = registration.getDesignatedCourses();
         this.reservedTimes = registration.getReservedTimes();
+        this.schedules = registration.getSchedules();
     }
 
     public long getUserid() {
@@ -128,6 +132,14 @@ public class Registration {
 
     public void setReservedTimes(Set<ReservedTime> reservedTimes) {
         this.reservedTimes = reservedTimes;
+    }
+
+    public Set<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(Set<Schedule> schedules) {
+        this.schedules = schedules;
     }
 
     public Registration(){
