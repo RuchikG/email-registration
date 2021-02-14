@@ -7,8 +7,8 @@ public class ReservedTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "reservedTimeID")
-    private Long reserved_timeID;
+    @Column(name = "reserved_timeid")
+    private Long reservedtimeID;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id",nullable = false)
@@ -25,12 +25,13 @@ public class ReservedTime {
     public ReservedTime() {
     }
 
+
     public Long getReserved_timeID() {
-        return reserved_timeID;
+        return reservedtimeID;
     }
 
     public void setReserved_timeID(Long reserved_timeID) {
-        this.reserved_timeID = reserved_timeID;
+        this.reservedtimeID = reserved_timeID;
     }
 
     public Registration getRegistration() {

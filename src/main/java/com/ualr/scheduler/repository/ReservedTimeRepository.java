@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository()
-public interface ReservedtimeRepository extends CrudRepository<ReservedTime,Long> {
-    ReservedTime findByReserved_timeID(Long reservedTimeID);
+public interface ReservedTimeRepository extends CrudRepository<ReservedTime,Long> {
+    ReservedTime findByReservedtimeID(Long ReservedtimeID);
 }
