@@ -2,6 +2,7 @@ package com.ualr.scheduler.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Registration {
@@ -25,6 +26,14 @@ public class Registration {
 
     private Date confirmationDate;
 
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @JoinTable(name = "designatedCourses",
+        joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false,updatable = false)},
+        inverseJoinColumns = {
+            @JoinColumn(name = "course_id",referencedColumnName = "course_id",nullable = false,updatable = false)})
+    private Set<Course> designatedCourses;
+
     public Registration(Registration registration) {
         this.userid = registration.getUserid();
         this.username = registration.getUsername();
@@ -34,6 +43,7 @@ public class Registration {
         this.roles = registration.getRoles();
         this.confirmationToken = registration.getConfirmationToken();
         this.confirmationDate = registration.getConfirmationDate();
+        this.designatedCourses = registration.getDesignatedCourses();
     }
 
     public long getUserid() {
@@ -98,6 +108,14 @@ public class Registration {
 
     public void setConfirmationDate(Date confirmationDate) {
         this.confirmationDate = confirmationDate;
+    }
+
+    public Set<Course> getDesignatedCourses() {
+        return designatedCourses;
+    }
+
+    public void setDesignatedCourses(Set<Course> designatedCourses) {
+        this.designatedCourses = designatedCourses;
     }
 
     public Registration(){

@@ -23,6 +23,9 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Section> sections;
 
+    @ManyToMany(mappedBy = "designatedCourses",fetch = FetchType.EAGER)
+    private Set<Registration> registrations;
+
     public Course() {
     }
 
@@ -32,6 +35,7 @@ public class Course {
         this.deptId = courses.getDeptId();
         this.courseTitle = courses.getCourseTitle();
         this.sections = courses.getSections();
+        this.registrations = courses.getRegistrations();
     }
 
     public Long getCourseid() {
@@ -72,5 +76,13 @@ public class Course {
 
     public void setSections(Set<Section> sections) {
         this.sections = sections;
+    }
+
+    public Set<Registration> getRegistrations() {
+        return registrations;
+    }
+
+    public void setRegistrations(Set<Registration> registrations) {
+        this.registrations = registrations;
     }
 }
