@@ -72,11 +72,13 @@ public class RegistrationController {
     public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken){
         Registration token = registrationRepository.findByConfirmationToken(confirmationToken);
 
-        if(token != null){
+        if((token != null) && (token.getRoles().equals("STUDENT"))){
             token.setEnabled(true);
             token.setConfirmationDate(new Date());
             registrationRepository.save(token);
             modelAndView.setViewName("accountVerified");
+        } else if ((token != null) && ((token.getRoles().equals("ADMIN")) || (token.getRoles().equals("ROOT")))){
+            modelAndView.setViewName("emailVerified");
         } else {
             modelAndView.addObject("message","The link is invalid or broken");
             modelAndView.setViewName("error");
