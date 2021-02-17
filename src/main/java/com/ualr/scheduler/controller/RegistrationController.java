@@ -86,6 +86,57 @@ public class RegistrationController {
         return modelAndView;
     }
 
+    //@PreAuthorize("hasAnyRole('ROOT')")
+    @RequestMapping(value = "/activate",method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView confirmation(ModelAndView modelAndView, @RequestParam("username")String username){
+        Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
+        if (registration != null){
+            registration.setEnabled(true);
+            registration.setConfirmationDate(new Date());
+            registrationRepository.save(registration);
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(registration.getEmailId());
+            mailMessage.setSubject("Congratulations!");
+            mailMessage.setFrom("ruchikgabha@gmail.com");
+            mailMessage.setText("Your account was just approved by your administrator!");
+            mailMessage.setReplyTo("ruchikgabha@gmail.com");
+            emailSenderService.sendEmail(mailMessage);
+
+            modelAndView.addObject("message","The account with username: " + registration.getUsername() + " is now approved");
+            modelAndView.setViewName("accountRequest");
+        } else {
+            modelAndView.addObject("message","The user doesn't exist");
+            modelAndView.setViewName("error");
+        }
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ROOT')")
+    @RequestMapping(value = "/delete",method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView deletion(ModelAndView modelAndView, @RequestParam("username")String username){
+        Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
+        if (registration != null){
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(registration.getEmailId());
+            mailMessage.setSubject("Status Update");
+            mailMessage.setFrom("ruchikgabha@gmail.com");
+            mailMessage.setText("We are sorry to inform you that your account request was denied by your administrator, if you believe this a mistake please register again at https://email-registration.herokuapp.com/register");
+            mailMessage.setReplyTo("ruchikgabha@gmail.com");
+            emailSenderService.sendEmail(mailMessage);
+
+            registrationRepository.delete(registration);
+
+            modelAndView.addObject("message","The account with username: " + registration.getUsername() + " is now deleted");
+            modelAndView.setViewName("accountRequest");
+        } else {
+            modelAndView.addObject("message","The user doesn't exist");
+            modelAndView.setViewName("error");
+        }
+        return modelAndView;
+    }
+
     public RegistrationRepository getRegistrationRepository() {
         return registrationRepository;
     }
