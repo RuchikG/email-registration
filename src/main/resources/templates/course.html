@@ -15,34 +15,38 @@
             column-gap: 120px;
             padding: 10px;
         }
+        p{
+            display: flex;
+            justify-content: space-between;
+            width: 30%;
+        }
     </style>
 </head>
 <body>
-
     <a style="float: right;margin-right: 20px;" href="/logout">Logout</a>
     <div>
-        <h6>Course Catalog:</h6>
+        <h6 th:text="'Dept. Id: ' + ${course.getDeptId()} "></h6>
+        <h6 th:text="'Course No: ' + ${course.getCourseNumber()} "></h6>
+        <h6 th:text="'Course Title: ' + ${course.getCourseTitle()} "></h6>
         <table class="tab" style="width: 100%">
             <tr>
-                <th>Dept. No</th>
-                <th>Course Number</th>
-                <th>Course Title</th>
+                <th>Section No</th>
+                <th>Instructor</th>
                 <th></th>
                 <th></th>
             </tr>
 
-            <th:block th:each="course: ${courses}">
+            <th:block th:each="section: ${sections}">
                 <tr>
-                    <td th:text="${course.getDeptId()}"></td>
-                    <td th:text="${course.getCourseNumber()}"></td>
-                    <td><a th:href="@{'/course?courseNum=' + ${course.getCourseNumber()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
+                    <td><a th:href="@{'/section?sectionNum=' + ${section.getSectionNumber()}}" th:text="${section.getSectionNumber()}" style="text-decoration: none; color: black"></a></td>
+                    <td th:text="${section.getInstructor()}"></td>
                     <td>
-                        <a th:href="@{'/editCourse?courseNum=' + ${course.getCourseNumber()}}">
+                        <a th:href="@{'/editSection?sectionNum=' + ${section.getSectionNumber()}}">
                             <button class="btn btn-primary mb-2">Edit</button>
                         </a>
                     </td>
                     <td>
-                        <a th:href="@{'/deleteCourse?courseNum=' + ${course.getCourseNumber()}}">
+                        <a th:href="@{'/deleteSection?sectionNum=' + ${section.getSectionNumber()}}">
                             <button class="btn btn-danger mb-2">Delete</button>
                         </a>
                     </td>

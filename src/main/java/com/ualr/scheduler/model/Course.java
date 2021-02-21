@@ -15,7 +15,7 @@ public class Course {
     private Long courseNumber;
 
     @Column(name = "dept_id")
-    private Long deptId;
+    private String deptId;
 
     @Column(name = "course_title")
     private String courseTitle;
@@ -45,11 +45,11 @@ public class Course {
         this.courseNumber = courseNumber;
     }
 
-    public Long getDeptId() {
+    public String getDeptId() {
         return deptId;
     }
 
-    public void setDeptId(Long deptId) {
+    public void setDeptId(String deptId) {
         this.deptId = deptId;
     }
 

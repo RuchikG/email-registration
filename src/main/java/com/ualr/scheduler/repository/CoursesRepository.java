@@ -10,4 +10,5 @@ import java.util.List;
 public interface CoursesRepository extends CrudRepository<Course, Long> {
     Course findByCourseNumber(Long courseNumber);
     List<Course> findAll();
+    Course findByCourseid(Long courseId);
 }

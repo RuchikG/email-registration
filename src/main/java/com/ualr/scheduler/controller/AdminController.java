@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class AdminController {
@@ -55,13 +56,98 @@ public class AdminController {
     }
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
-    @RequestMapping(value = "/deleteCourse", method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView editCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+    @RequestMapping(value = "/editCourse",method = RequestMethod.GET)
+    public ModelAndView displayEditCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
         Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
-        modelAndView.addObject("message","the course " + course.getCourseTitle() + " has been deleted successfully!");
+        modelAndView.addObject("course",course);
+        modelAndView.setViewName("editCourse");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/editCourse",method = RequestMethod.POST)
+    public ModelAndView editCourse(ModelAndView modelAndView, Course course){
+        Course check = coursesRepository.findByCourseid(course.getCourseid());
+        check.setCourseNumber(course.getCourseNumber());
+        check.setCourseTitle(course.getCourseTitle());
+        check.setDeptId(course.getDeptId());
+        modelAndView.addObject("message","The course " + check.getCourseTitle() + " has been updated successfully!");
+        modelAndView.setViewName("courseRequest");
+        coursesRepository.save(check);
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/deleteCourse", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView deleteCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+        modelAndView.addObject("message","The course " + course.getCourseTitle() + " has been deleted successfully!");
         modelAndView.setViewName("courseRequest");
         coursesRepository.delete(course);
         return modelAndView;
     }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/course", method = RequestMethod.GET)
+    public ModelAndView viewCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+        Set<Section> sections = course.getSections();
+        modelAndView.addObject("course",course);
+        modelAndView.addObject("sections",sections);
+        modelAndView.setViewName("course");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/addSection",method = RequestMethod.GET)
+    public ModelAndView displayAddSection(ModelAndView modelAndView, Section section){
+        modelAndView.addObject("section",section);
+        modelAndView.setViewName("addSection");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/addSection",method = RequestMethod.POST)
+    public ModelAndView addSection(ModelAndView modelAndView, Section section){
+        Long courseNum = section.getCourses().getCourseNumber();
+        Course course = coursesRepository.findByCourseNumber(courseNum);
+        section.setCourses(course);
+        modelAndView.addObject("message","The section has been added successfully!");
+        modelAndView.setViewName("courseRequest");
+        sectionRepository.save(section);
+        return modelAndView;
+    }
+
+    /*//@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/editCourse",method = RequestMethod.GET)
+    public ModelAndView displayEditCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+        modelAndView.addObject("course",course);
+        modelAndView.setViewName("editCourse");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/editCourse",method = RequestMethod.POST)
+    public ModelAndView editCourse(ModelAndView modelAndView, Course course){
+        Course check = coursesRepository.findByCourseid(course.getCourseid());
+        check.setCourseNumber(course.getCourseNumber());
+        check.setCourseTitle(course.getCourseTitle());
+        check.setDeptId(course.getDeptId());
+        modelAndView.addObject("message","The course " + check.getCourseTitle() + " has been updated successfully!");
+        modelAndView.setViewName("courseRequest");
+        coursesRepository.save(check);
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/deleteCourse", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView deleteCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+        modelAndView.addObject("message","The course " + course.getCourseTitle() + " has been deleted successfully!");
+        modelAndView.setViewName("courseRequest");
+        coursesRepository.delete(course);
+        return modelAndView;
+    } */
 
 }
