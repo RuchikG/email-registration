@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.UUID;
@@ -29,6 +31,11 @@ public class RegistrationController {
 
     @Autowired
     private EmailSenderService emailSenderService;
+
+    @RequestMapping(value = "/logout",method = {RequestMethod.GET,RequestMethod.POST})
+    public void logout(HttpServletRequest request){
+        request.getSession().invalidate();
+    }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView displayRegistration(ModelAndView modelAndView, Registration registration)

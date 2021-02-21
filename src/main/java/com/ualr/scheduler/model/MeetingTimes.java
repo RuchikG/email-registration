@@ -1,5 +1,6 @@
 package com.ualr.scheduler.model;
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class MeetingTimes {
@@ -15,9 +16,9 @@ public class MeetingTimes {
 
     private String endTime;
 
-    @ManyToOne(fetch = FetchType.EAGER,optional = false)
-    @JoinColumn(name = "section_number", nullable = false)
-    private Section sections;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "section_id",nullable = false)
+    private Section section;
 
     public MeetingTimes() {
     }
@@ -55,10 +56,10 @@ public class MeetingTimes {
     }
 
     public Section getSections() {
-        return sections;
+        return section;
     }
 
-    public void setSections(Section sections) {
-        this.sections = sections;
+    public void setSections(Section section) {
+        this.section = section;
     }
 }

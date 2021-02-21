@@ -41,7 +41,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/student").authenticated()
                 .anyRequest().permitAll().and()
-                .formLogin().permitAll();
+                .formLogin().permitAll().and()
+                .logout().invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
     }
 
     @Bean

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>CourseRequest</title>
+    <th:if sec:authorize="hasRole('ADMIN')">
+        <meta http-equiv="refresh" content="10;URL=/admin">
+    </th:if>
+    <th:if sec:authorize="hasRole('ROOT')">
+        <meta http-equiv="refresh" content="10;URL=/root">
+    </th:if>
+</head>
+<body>
+
+<span style="text-align: center" th:text="${message}"></span>
+
+</body>
+</html>

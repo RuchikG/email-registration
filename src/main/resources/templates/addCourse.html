@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Course</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
+    <style>
+        .wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            min-height: 100%;
+            padding: 20px;
+        }
+
+        #formContent {
+            -webkit-border-radius: 10px 10px 10px 10px;
+            border-radius: 10px 10px 10px 10px;
+            background: #fff;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            padding: 0px;
+            -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+            box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .form-group {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <div class="fadeIn first">
+                <p>Add a new course:</p>
+            </div>
+            <form action="#" th:action="@{/addCourse}" th:object="${course}" method="post">
+                <div class="form-group">
+                    <label for="deptId">Dept. Id:</label>
+                    <input th:field="*{deptId}" type="text" name="deptId" class="form-control" placeholder="Enter the dept id">
+                </div>
+                <div class="form-group">
+                    <label for="courseNo">Course Number:</label>
+                    <input th:field="*{courseNumber}" type="text" name="courseNo" class="form-control" placeholder="Enter the course number">
+                </div>
+                <div class="form-group">
+                    <td><label for="courseTitle">Course Title:</label></td>
+                    <td><input th:field="*{courseTitle}" type="text" name="courseTitle" class="form-control" placeholder="Enter the course title"></td>
+                </div>
+                <div class="form-group">
+                    <input type="reset" value="Clear" class="btn btn-primary mb-2"/>
+                    <input type="submit" value="Submit" class="btn btn-primary mb-2"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

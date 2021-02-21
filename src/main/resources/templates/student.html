@@ -4,11 +4,13 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-    <title>Congrats!</title>
+    <title>Student</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
 </head>
 <body>
 
-<h3 style="text-align: center">Congratulations! Here is your student page!</h3>
+    <a style="float: right; margin-right: 20px;" href="/logout">Logout</a>
+    <h3 style="text-align: center">Congratulations! Here is your student page!</h3>
 
 </body>
 </html>

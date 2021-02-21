@@ -4,11 +4,51 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-    <title>Congrats!</title>
+    <title>Admin</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
+    <style>
+        body{
+            padding: 10px;
+        }
+        .tab{
+            border: 1px solid black;
+            column-gap: 120px;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
 
-<h3 style="text-align: center">Congratulations! Here is your admin page!</h3>
+    <a style="float: right;margin-right: 20px;" href="/logout">Logout</a>
+    <div>
+        <h6>Course Catalog:</h6>
+        <table class="tab" style="column-gap: 120px">
+            <tr>
+                <th>Dept. No</th>
+                <th>Course Number</th>
+                <th>Course Title</th>
+                <th></th>
+                <th></th>
+            </tr>
 
+            <th:block th:each="course: ${courses}">
+                <tr>
+                    <td th:text="${course.getDeptId()}"></td>
+                    <td th:text="${course.getCourseNumber()}"></td>
+                    <td th:text="${course.getCourseTitle()}"></td>
+                    <td>
+                        <a th:href="@{'/editCourse?courseNum=' + ${course.getCourseNumber()}}">
+                            <button class="btn btn-primary mb-2">Edit</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/deleteCourse?courseNum=' + ${course.getCourseNumber()}}">
+                            <button class="btn btn-danger mb-2">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
 </body>
 </html>

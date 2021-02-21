@@ -21,7 +21,7 @@ public class Section {
     @Column(name = "instructor")
     private String instructor;
 
-    @OneToMany(mappedBy = "sections", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "section",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<MeetingTimes> meetingTimes;
 
     public Section() {
@@ -59,11 +59,11 @@ public class Section {
         this.instructor = instructor;
     }
 
-    public Set<MeetingTimes> getMeetingTimes() {
+    public Set<MeetingTimes> getMeetingTime() {
         return meetingTimes;
     }
 
-    public void setMeetingTimes(Set<MeetingTimes> meetingTimes) {
+    public void setMeetingTime(Set<MeetingTimes> meetingTimes) {
         this.meetingTimes = meetingTimes;
     }
 }
