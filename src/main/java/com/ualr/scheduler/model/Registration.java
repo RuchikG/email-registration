@@ -20,6 +20,8 @@ public class Registration {
 
     private boolean isEnabled;
 
+    private boolean emailVerified;
+
     private String roles;
 
     private String confirmationToken;
@@ -46,6 +48,7 @@ public class Registration {
         this.emailId = registration.getEmailId();
         this.password = registration.getPassword();
         this.isEnabled = registration.isEnabled();
+        this.emailVerified = registration.isEmailVerified();
         this.roles = registration.getRoles();
         this.confirmationToken = registration.getConfirmationToken();
         this.confirmationDate = registration.getConfirmationDate();
@@ -92,6 +95,14 @@ public class Registration {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
     public String getRoles() {

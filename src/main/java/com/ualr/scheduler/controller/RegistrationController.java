@@ -81,10 +81,14 @@ public class RegistrationController {
 
         if((token != null) && (token.getRoles().equals("STUDENT"))){
             token.setEnabled(true);
+            token.setEmailVerified(true);
             token.setConfirmationDate(new Date());
             registrationRepository.save(token);
             modelAndView.setViewName("accountVerified");
         } else if ((token != null) && ((token.getRoles().equals("ADMIN")) || (token.getRoles().equals("ROOT")))){
+            token.setEmailVerified(true);
+            token.setConfirmationDate(new Date());
+            registrationRepository.save(token);
             modelAndView.setViewName("emailVerified");
         } else {
             modelAndView.addObject("message","The link is invalid or broken");
@@ -97,7 +101,7 @@ public class RegistrationController {
     @RequestMapping(value = "/activate",method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView confirmation(ModelAndView modelAndView, @RequestParam("username")String username){
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
-        if (registration != null){
+        if (registration != null && registration.isEmailVerified() != false){
             registration.setEnabled(true);
             registration.setConfirmationDate(new Date());
             registrationRepository.save(registration);
@@ -112,8 +116,8 @@ public class RegistrationController {
 
             modelAndView.addObject("message","The account with username: " + registration.getUsername() + " is now approved");
             modelAndView.setViewName("accountRequest");
-        } else {
-            modelAndView.addObject("message","The user doesn't exist");
+        } else if (registration != null){
+            modelAndView.addObject("message","The user hasn't verified their email address yet");
             modelAndView.setViewName("error");
         }
         return modelAndView;
