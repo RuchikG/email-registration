@@ -6,11 +6,74 @@
 <head>
     <title>Student</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
+    <style>
+        body{
+            padding: 10px;
+        }
+        .tab{
+            border: 1px solid black;
+            column-gap: 120px;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
 
     <a style="float: right; margin-right: 20px;" href="/logout">Logout</a>
-    <h3 style="text-align: center">Congratulations! Here is your student page!</h3>
+    <div>
+        <h6>Course Catalog:</h6>
+        <table class="tab" style="width: 100%">
+            <tr>
+                <th>Dept. No</th>
+                <th>Course Number</th>
+                <th>Course Title</th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            <th:block th:each="course: ${courses}">
+                <tr>
+                    <td th:text="${course.getDeptId()}"></td>
+                    <td th:text="${course.getCourseNumber()}"></td>
+                    <td><a th:href="@{'/course?courseNum=' + ${course.getCourseNumber()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
+                    <td>
+                        <a th:href="@{'/editCourse?courseNum=' + ${course.getCourseNumber()}}">
+                            <button class="btn btn-primary mb-2">Edit</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/deleteCourse?courseNum=' + ${course.getCourseNumber()}}">
+                            <button class="btn btn-danger mb-2">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
+    <div>
+        <h6>Designated Courses:</h6>
+        <table class="tab" style="width: 100%">
+            <tr>
+                <th>Dept. No</th>
+                <th>Course Number</th>
+                <th>Course Title</th>
+                <th></th>
+            </tr>
+
+            <th:block th:each="dcourse: ${designatedCourses}">
+                <tr>
+                    <td th:text="${dcourse.getDeptId()}"></td>
+                    <td th:text="${dcourse.getCourseNumber()}"></td>
+                    <td><a th:href="@{'/course?courseNum=' + ${dcourse.getCourseNumber()}}" th:text="${dcourse.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
+                    <td>
+                        <a th:href="@{'/deleteDCourse?courseNum=' + ${dcourse.getCourseNumber()}}">
+                            <button class="btn btn-danger mb-2">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
 
 </body>
 </html>

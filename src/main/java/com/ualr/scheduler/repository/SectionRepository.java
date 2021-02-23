@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository()
 public interface SectionRepository extends CrudRepository<Section,Long> {
     Section findBySectionNumber(Long sectionNumber);
+    Section findBySectionid(Long sectionId);
 }

@@ -11,6 +11,7 @@
         }
         .b{
             border: 1px solid black;
+            padding: 10px;
         }
     </style>
 </head>
@@ -18,7 +19,7 @@
     <a style="float: right; margin-right: 20px;" href="/logout">Logout</a>
     <div>
         <h6>Active request queue:</h6>
-        <table style="width: 500px; max-height: 500px;overflow: scroll" class="b" th:if="${requests.size() > 0}">
+        <table style="width: 100%;" class="b" th:if="${requests.size() > 0}">
             <tr>
                 <th>Username: </th>
                 <th>Access Level: </th>
@@ -45,6 +46,36 @@
         <p th:unless="${requests.size() > 0}">
             There are no active requests!
         </p>
+    </div>
+    <div style="margin-top: 20px">
+        <h6>Course Catalog:</h6>
+        <table style="width: 100%;" class="b">
+            <tr>
+                <th>Dept. No</th>
+                <th>Course Number</th>
+                <th>Course Title</th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            <th:block th:each="course: ${courses}">
+                <tr>
+                    <td th:text="${course.getDeptId()}"></td>
+                    <td th:text="${course.getCourseNumber()}"></td>
+                    <td><a th:href="@{'/course?courseNum=' + ${course.getCourseNumber()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
+                    <td>
+                        <a th:href="@{'/editCourse?courseNum=' + ${course.getCourseNumber()}}">
+                            <button class="btn btn-primary mb-2">Edit</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/deleteCourse?courseNum=' + ${course.getCourseNumber()}}">
+                            <button class="btn btn-danger mb-2">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            </th:block>
+        </table>
     </div>
 </body>
 </html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>View Section</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
+    <style>
+        body{
+            padding: 10px;
+        }
+        .tab{
+            border: 1px solid black;
+            column-gap: 120px;
+            padding: 10px;
+        }
+        p{
+            display: flex;
+            justify-content: space-between;
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+<a style="float: right;margin-right: 20px;" href="/logout">Logout</a>
+<div>
+    <h6 th:text="'Section No: ' + ${section.getSectionNumber()} "></h6>
+    <h6 th:text="'Instructor: ' + ${section.getInstructor()} "></h6>
+    <table class="tab" style="width: 100%">
+        <tr>
+            <th>Meeting Day</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        <th:block th:each="meetingTime: ${meetingTimes}">
+            <tr>
+                <td th:text="${meetingTime.getDay()}"></td>
+                <td th:text="${meetingTime.getStartTime()}"></td>
+                <td th:text="${meetingTime.getEndTime()}"></td>
+                <td>
+                    <a th:href="@{'/editMeetingtime?meetingId=' + ${meetingTime.getMeetingId()}}">
+                        <button class="btn btn-primary mb-2">Edit</button>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{'/deleteMeetingtime?meetingId=' + ${meetingTime.getMeetingId()}}">
+                        <button class="btn btn-danger mb-2">Delete</button>
+                    </a>
+                </td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+</body>
+</html>

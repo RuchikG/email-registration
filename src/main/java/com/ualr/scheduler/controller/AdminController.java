@@ -1,8 +1,10 @@
 package com.ualr.scheduler.controller;
 
 import com.ualr.scheduler.model.Course;
+import com.ualr.scheduler.model.MeetingTimes;
 import com.ualr.scheduler.model.Section;
 import com.ualr.scheduler.repository.CoursesRepository;
+import com.ualr.scheduler.repository.MeetingtimeRepository;
 import com.ualr.scheduler.repository.RegistrationRepository;
 import com.ualr.scheduler.repository.SectionRepository;
 import org.dom4j.rule.Mode;
@@ -21,7 +23,7 @@ import java.util.Set;
 public class AdminController {
 
     @Autowired
-    private RegistrationRepository registrationRepository;
+    private MeetingtimeRepository meetingtimeRepository;
 
     @Autowired
     private CoursesRepository coursesRepository;
@@ -118,36 +120,99 @@ public class AdminController {
         return modelAndView;
     }
 
-    /*//@PreAuthorize("hasAnyRole('ADMIN')")
-    @RequestMapping(value = "/editCourse",method = RequestMethod.GET)
-    public ModelAndView displayEditCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
-        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
-        modelAndView.addObject("course",course);
-        modelAndView.setViewName("editCourse");
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/editSection",method = RequestMethod.GET)
+    public ModelAndView displayEditSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
+        Section section = sectionRepository.findBySectionNumber(Long.decode(sectionNum));
+        modelAndView.addObject("section",section);
+        modelAndView.setViewName("editSection");
         return modelAndView;
     }
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
-    @RequestMapping(value = "/editCourse",method = RequestMethod.POST)
-    public ModelAndView editCourse(ModelAndView modelAndView, Course course){
-        Course check = coursesRepository.findByCourseid(course.getCourseid());
-        check.setCourseNumber(course.getCourseNumber());
-        check.setCourseTitle(course.getCourseTitle());
-        check.setDeptId(course.getDeptId());
-        modelAndView.addObject("message","The course " + check.getCourseTitle() + " has been updated successfully!");
+    @RequestMapping(value = "/editSection",method = RequestMethod.POST)
+    public ModelAndView editSection(ModelAndView modelAndView, Section section){
+        Section check = sectionRepository.findBySectionid(section.getSectionid());
+        check.setSectionNumber(section.getSectionNumber());
+        check.setInstructor(section.getInstructor());
+        modelAndView.addObject("message","The section has been updated successfully!");
         modelAndView.setViewName("courseRequest");
-        coursesRepository.save(check);
+        sectionRepository.save(check);
         return modelAndView;
     }
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
-    @RequestMapping(value = "/deleteCourse", method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView deleteCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
-        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
-        modelAndView.addObject("message","The course " + course.getCourseTitle() + " has been deleted successfully!");
+    @RequestMapping(value = "/deleteSection", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView deleteSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
+        Section section = sectionRepository.findBySectionNumber(Long.decode(sectionNum));
+        modelAndView.addObject("message","The section has been deleted successfully!");
         modelAndView.setViewName("courseRequest");
-        coursesRepository.delete(course);
+        section.getCourses().getSections().remove(section);
+        sectionRepository.delete(section);
         return modelAndView;
-    } */
+    }
 
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/section", method = RequestMethod.GET)
+    public ModelAndView viewSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
+        Section section = sectionRepository.findBySectionNumber(Long.decode(sectionNum));
+        Set<MeetingTimes> meetingTimes = section.getMeetingTime();
+        modelAndView.addObject("section",section);
+        modelAndView.addObject("meetingTimes",meetingTimes);
+        modelAndView.setViewName("section");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/addMeetingtime",method = RequestMethod.GET)
+    public ModelAndView displayAddMeetingTime(ModelAndView modelAndView, MeetingTimes meetingTimes){
+        modelAndView.addObject("meetingtime",meetingTimes);
+        modelAndView.setViewName("addMeetingtime");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/addMeetingtime",method = RequestMethod.POST)
+    public ModelAndView addMeetingTime(ModelAndView modelAndView, MeetingTimes meetingTimes){
+        Long sectionNum = meetingTimes.getSections().getSectionNumber();
+        Section section = sectionRepository.findBySectionNumber(sectionNum);
+        meetingTimes.setSections(section);
+        modelAndView.addObject("message","The meeting time has been added successfully!");
+        modelAndView.setViewName("courseRequest");
+        meetingtimeRepository.save(meetingTimes);
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/editMeetingtime",method = RequestMethod.GET)
+    public ModelAndView displayEditMeetingTime(ModelAndView modelAndView, @RequestParam("meetingId")String meetingId){
+        MeetingTimes meetingTimes = meetingtimeRepository.findByMeetingId(Long.decode(meetingId));
+        modelAndView.addObject("meetingtime",meetingTimes);
+        modelAndView.setViewName("editMeetingtime");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/editMeetingtime",method = RequestMethod.POST)
+    public ModelAndView editMeetingTime(ModelAndView modelAndView, MeetingTimes meetingTimes){
+        MeetingTimes check = meetingtimeRepository.findByMeetingId(meetingTimes.getMeetingId());
+        check.setDay(meetingTimes.getDay());
+        check.setStartTime(meetingTimes.getStartTime());
+        check.setEndTime(meetingTimes.getEndTime());
+        modelAndView.addObject("message","The meeting time has been updated successfully!");
+        modelAndView.setViewName("courseRequest");
+        meetingtimeRepository.save(check);
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/deleteMeetingtime", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView deleteMeetingTime(ModelAndView modelAndView, @RequestParam("meetingId")String meetingId){
+        MeetingTimes meetingTimes = meetingtimeRepository.findByMeetingId(Long.decode(meetingId));
+        modelAndView.addObject("message","The meeting time has been deleted successfully!");
+        modelAndView.setViewName("courseRequest");
+        meetingTimes.getSections().getMeetingTime().remove(meetingTimes);
+        meetingtimeRepository.delete(meetingTimes);
+        return modelAndView;
+    }
 }
