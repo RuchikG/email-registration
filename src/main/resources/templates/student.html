@@ -6,6 +6,7 @@
 <head>
     <title>Student</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         body{
             padding: 10px;
@@ -14,6 +15,10 @@
             border: 1px solid black;
             column-gap: 120px;
             padding: 10px;
+        }
+        input[type=checkbox]{
+            transform: scale(1.5);
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -24,6 +29,7 @@
         <h6>Course Catalog:</h6>
         <table class="tab" style="width: 100%">
             <tr>
+                <th style="margin-left: 10px">Select</th>
                 <th>Dept. No</th>
                 <th>Course Number</th>
                 <th>Course Title</th>
@@ -33,6 +39,7 @@
 
             <th:block th:each="course: ${courses}">
                 <tr>
+                    <td style="margin-left: 10px;"><input type="checkbox" class="includeCheck" th:value="${course.getCourseNumber()}"></td>
                     <td th:text="${course.getDeptId()}"></td>
                     <td th:text="${course.getCourseNumber()}"></td>
                     <td><a th:href="@{'/course?courseNum=' + ${course.getCourseNumber()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
@@ -49,8 +56,29 @@
                 </tr>
             </th:block>
         </table>
+        <button class="btn btn-outline-primary mb-2 dcourse" style="float: right;margin-top: 10px;" onclick="">Add Designated Course</button>
     </div>
-    <div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.dcourse').click(function (e) {
+                e.preventDefault();
+                var x = $('.includeCheck:checked');
+                var courses = [];
+                for (let input of x){
+                    courses.push(input.value);
+                }
+                console.log(courses);
+                var courseNum = courses.join(',');
+                window.location.href = ("http://localhost:8080/addDCourse?courseNum=" + courseNum);
+            });
+            $('table tr').click(function (event) {
+                if (event.target.type !== 'checkbox'){
+                    $(':checkbox',this).trigger('click');
+                }
+            })
+        })
+    </script>
+    <div style="margin-top: 80px;">
         <h6>Designated Courses:</h6>
         <table class="tab" style="width: 100%">
             <tr>
@@ -74,6 +102,5 @@
             </th:block>
         </table>
     </div>
-
 </body>
 </html>

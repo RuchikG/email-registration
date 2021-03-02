@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Wossamotta U</title>
+    <th:if sec:authorize="hasRole('ADMIN')">
+        <meta http-equiv="refresh" content="0;URL=/admin">
+    </th:if>
+    <th:if sec:authorize="hasRole('ROOT')">
+        <meta http-equiv="refresh" content="0;URL=/root">
+    </th:if>
+    <th:if sec:authorize="hasRole('STUDENT')">
+        <meta http-equiv="refresh" content="0;URL=/student">
+    </th:if>
+</head>
+<body>
+<h3>This is home page!</h3>
+</body>
+</html>
