@@ -32,20 +32,20 @@
             <tr>
                 <th>Section No</th>
                 <th>Instructor</th>
-                <th></th>
-                <th></th>
+                <th sec:authorize="hasAnyRole('ROOT','ADMIN')"></th>
+                <th sec:authorize="hasAnyRole('ROOT','ADMIN')"></th>
             </tr>
 
             <th:block th:each="section: ${sections}">
                 <tr>
                     <td><a th:href="@{'/section?sectionNum=' + ${section.getSectionNumber()}}" th:text="${section.getSectionNumber()}" style="text-decoration: none; color: black"></a></td>
                     <td th:text="${section.getInstructor()}"></td>
-                    <td>
+                    <td sec:authorize="hasAnyRole('ROOT','ADMIN')">
                         <a th:href="@{'/editSection?sectionNum=' + ${section.getSectionNumber()}}">
                             <button class="btn btn-primary mb-2">Edit</button>
                         </a>
                     </td>
-                    <td>
+                    <td sec:authorize="hasAnyRole('ROOT','ADMIN')">
                         <a th:href="@{'/deleteSection?sectionNum=' + ${section.getSectionNumber()}}">
                             <button class="btn btn-danger mb-2">Delete</button>
                         </a>
@@ -53,7 +53,7 @@
                 </tr>
             </th:block>
         </table>
-        <a th:href="@{'/addSection'}" style="float: right;margin-top: 10px;">
+        <a sec:authorize="hasAnyRole('ROOT','ADMIN')" th:href="@{'/addSection'}" style="float: right;margin-top: 10px;">
             <button class="btn btn-outline-primary mb-2">Add Section</button>
         </a>
     </div>

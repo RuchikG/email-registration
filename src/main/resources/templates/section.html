@@ -32,8 +32,8 @@
             <th>Meeting Day</th>
             <th>Start Time</th>
             <th>End Time</th>
-            <th></th>
-            <th></th>
+            <th sec:authorize="hasAnyRole('ROOT','ADMIN')"></th>
+            <th sec:authorize="hasAnyRole('ROOT','ADMIN')"></th>
         </tr>
 
         <th:block th:each="meetingTime: ${meetingTimes}">
@@ -41,12 +41,12 @@
                 <td th:text="${meetingTime.getDay()}"></td>
                 <td th:text="${meetingTime.getStartTime()}"></td>
                 <td th:text="${meetingTime.getEndTime()}"></td>
-                <td>
+                <td sec:authorize="hasAnyRole('ROOT','ADMIN')">
                     <a th:href="@{'/editMeetingtime?meetingId=' + ${meetingTime.getMeetingId()}}">
                         <button class="btn btn-primary mb-2">Edit</button>
                     </a>
                 </td>
-                <td>
+                <td sec:authorize="hasAnyRole('ROOT','ADMIN')">
                     <a th:href="@{'/deleteMeetingtime?meetingId=' + ${meetingTime.getMeetingId()}}">
                         <button class="btn btn-danger mb-2">Delete</button>
                     </a>
@@ -54,7 +54,7 @@
             </tr>
         </th:block>
     </table>
-    <a th:href="@{'/addMeetingtime'}" style="float: right;margin-top: 10px;">
+    <a sec:authorize="hasAnyRole('ROOT','ADMIN')" th:href="@{'/addMeetingtime'}" style="float: right;margin-top: 10px;">
         <button class="btn btn-outline-primary mb-2">Add Meeting Time</button>
     </a>
 </div>
