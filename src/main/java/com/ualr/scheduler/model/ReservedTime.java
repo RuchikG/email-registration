@@ -14,6 +14,9 @@ public class ReservedTime {
     @JoinColumn(name = "user_id",nullable = false)
     private Registration registration;
 
+    @Column(name = "day")
+    private String day;
+
     @Column(name = "start_time")
     private String startTime;
 
@@ -40,6 +43,14 @@ public class ReservedTime {
 
     public void setRegistration(Registration registration) {
         this.registration = registration;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
     }
 
     public String getStartTime() {

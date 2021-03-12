@@ -36,6 +36,14 @@ public class Registration {
             @JoinColumn(name = "course_id",referencedColumnName = "course_id",nullable = false,updatable = false)})
     private Set<Course> designatedCourses;
 
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @JoinTable(name = "possibleCourses",
+            joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false,updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "course_id",referencedColumnName = "course_id",nullable = false,updatable = false)})
+    private Set<Course> possibleCourses;
+
     @OneToMany(mappedBy = "registration",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<ReservedTime> reservedTimes;
 
@@ -53,6 +61,7 @@ public class Registration {
         this.confirmationToken = registration.getConfirmationToken();
         this.confirmationDate = registration.getConfirmationDate();
         this.designatedCourses = registration.getDesignatedCourses();
+        this.possibleCourses = registration.getPossibleCourses();
         this.reservedTimes = registration.getReservedTimes();
         this.schedules = registration.getSchedules();
     }
@@ -135,6 +144,14 @@ public class Registration {
 
     public void setDesignatedCourses(Set<Course> designatedCourses) {
         this.designatedCourses = designatedCourses;
+    }
+
+    public Set<Course> getPossibleCourses() {
+        return possibleCourses;
+    }
+
+    public void setPossibleCourses(Set<Course> possibleCourses) {
+        this.possibleCourses = possibleCourses;
     }
 
     public Set<ReservedTime> getReservedTimes() {

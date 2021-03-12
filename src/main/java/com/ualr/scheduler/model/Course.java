@@ -26,6 +26,9 @@ public class Course {
     @ManyToMany(mappedBy = "designatedCourses",fetch = FetchType.EAGER)
     private Set<Registration> registrations;
 
+    @ManyToMany(mappedBy = "possibleCourses",fetch = FetchType.EAGER)
+    private Set<Registration> registrationSet;
+
     public Course() {
     }
 
@@ -75,5 +78,13 @@ public class Course {
 
     public void setRegistrations(Set<Registration> registrations) {
         this.registrations = registrations;
+    }
+
+    public Set<Registration> getRegistrationSet() {
+        return registrationSet;
+    }
+
+    public void setRegistrationSet(Set<Registration> registrationSet) {
+        this.registrationSet = registrationSet;
     }
 }
