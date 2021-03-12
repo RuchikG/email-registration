@@ -3,6 +3,7 @@ package com.ualr.scheduler.controller;
 import com.ualr.scheduler.model.*;
 import com.ualr.scheduler.repository.CoursesRepository;
 import com.ualr.scheduler.repository.RegistrationRepository;
+import com.ualr.scheduler.repository.ReservedTimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,9 @@ public class StudentController {
     @Autowired
     RegistrationRepository registrationRepository;
 
+    @Autowired
+    ReservedTimeRepository reservedTimeRepository;
+
     //@PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/student",method = RequestMethod.GET)
     public ModelAndView studentPage(ModelAndView modelAndView){
@@ -36,10 +40,12 @@ public class StudentController {
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         Set<Course> designatedCourses = registration.getDesignatedCourses();
         Set<Course> possibleCourses = registration.getPossibleCourses();
+        Set<ReservedTime> reservedTimes = registration.getReservedTimes();
         List<Course> courses = coursesRepository.findAll();
         modelAndView.addObject("courses",courses);
         modelAndView.addObject("possibleCourses",possibleCourses);
         modelAndView.addObject("designatedCourses",designatedCourses);
+        modelAndView.addObject("reserveTimes",reservedTimes);
         modelAndView.setViewName("student");
         return modelAndView;
     }
@@ -109,12 +115,66 @@ public class StudentController {
         return modelAndView;
     }
 
-    /*@PreAuthorize("hasAnyRole('STUDENT')")
-    @RequestMapping(value = '/addReserve', method = RequestMethod.GET)
-    public ModelAndView addingReserveTime(ModelAndView modelAndView){
-
+    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @RequestMapping(value = "/addReserve", method = RequestMethod.GET)
+    public ModelAndView addingReserveTime(ModelAndView modelAndView, ReservedTime reservedTime){
+        modelAndView.setViewName("addReserveTime");
+        modelAndView.addObject("reserveTime",reservedTime);
         return modelAndView;
-    }*/
+    }
+
+    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @RequestMapping(value = "/addReserve", method = RequestMethod.POST)
+    public ModelAndView addReserveTime(ModelAndView modelAndView, ReservedTime reservedTime){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
+        Set<ReservedTime> reservedTimes = registration.getReservedTimes();
+        reservedTime.setRegistration(registration);
+        reservedTimes.add(reservedTime);
+        modelAndView.addObject("message","The reserved time has been added to the user");
+        modelAndView.setViewName("courseRequest");
+        registrationRepository.save(registration);
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @RequestMapping(value = "/editReserve",method = RequestMethod.GET)
+    public ModelAndView displayEditReserveTime(ModelAndView modelAndView, @RequestParam("id")String id){
+        ReservedTime reservedTime = reservedTimeRepository.findByReservedtimeID(Long.decode(id));
+        modelAndView.addObject("reserveTime",reservedTime);
+        modelAndView.setViewName("editReserveTime");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @RequestMapping(value = "/editReserve",method = RequestMethod.POST)
+    public ModelAndView editReserveTime(ModelAndView modelAndView, ReservedTime reservedTime){
+        ReservedTime check = reservedTimeRepository.findByReservedtimeID(reservedTime.getReserved_timeID());
+        check.setDay(reservedTime.getDay());
+        check.setStartTime(reservedTime.getStartTime());
+        check.setEndTime(reservedTime.getEndTime());
+        check.setDescription(reservedTime.getDescription());
+        modelAndView.addObject("message","The course " + check.getReserved_timeID() + " has been updated successfully!");
+        modelAndView.setViewName("courseRequest");
+        reservedTimeRepository.save(check);
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @RequestMapping(value = "/deleteReserve", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView deleteReserve(ModelAndView modelAndView, @RequestParam("id")String id){
+        ReservedTime reservedTime = reservedTimeRepository.findByReservedtimeID(Long.decode(id));
+        modelAndView.addObject("message","The reserved time " + reservedTime.getReserved_timeID() + " has been deleted successfully!");
+        modelAndView.setViewName("courseRequest");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Registration registration = registrationRepository.findByUsernameIgnoreCase(auth.getName());
+        Set<ReservedTime> reservedTimeSet = registration.getReservedTimes();
+        reservedTimeSet.remove(reservedTime);
+        registrationRepository.save(registration);
+        reservedTimeRepository.delete(reservedTime);
+        return modelAndView;
+    }
 
     /*@PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/generateSchedules", method = RequestMethod.GET)

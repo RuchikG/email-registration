@@ -123,5 +123,40 @@
             </th:block>
         </table>
     </div>
+    <div style="margin-top: 80px;">
+        <h6>Reserved Times:</h6>
+        <table class="tab" style="width: 100%">
+            <tr>
+                <th>Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Description</th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            <th:block th:each="reserveTime: ${reserveTimes}">
+                <tr>
+                    <td th:text="${reserveTime.getDay()}"></td>
+                    <td th:text="${reserveTime.getStartTime()}"></td>
+                    <td th:text="${reserveTime.getEndTime()}"></td>
+                    <td th:text="${reserveTime.getDescription()}"></td>
+                    <td>
+                        <a th:href="@{'/editReserve?id=' + ${reserveTime.getReserved_timeID()}}">
+                            <button class="btn btn-primary mb-2">Edit</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/deleteReserve?id=' + ${reserveTime.getReserved_timeID()}}">
+                            <button class="btn btn-danger mb-2">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            </th:block>
+        </table>
+        <a th:href="@{'/addReserve'}" style="float: right;margin-top: 10px;">
+            <button class="btn btn-outline-primary mb-2">Add Reserve Time</button>
+        </a>
+    </div>
 </body>
 </html>

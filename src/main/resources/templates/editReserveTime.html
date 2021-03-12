@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Reserve Time</title>
+    <title>Edit Reserve Time</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
     <style>
         .wrapper {
@@ -41,24 +41,27 @@
 <div class="wrapper fadeInDown">
     <div id="formContent">
         <div class="fadeIn first">
-            <p>Add a new reserve time:</p>
+            <p>Edit reserve time:</p>
         </div>
-        <form action="#" th:action="@{/addReserve}" th:object="${reserveTime}" method="post">
+        <form action="#" th:action="@{/editReserve}" th:object="${reserveTime}" method="post">
             <div class="form-group">
                 <label for="Day">Day:</label>
-                <input th:field="*{day}" type="text" name="day" class="form-control" placeholder="Enter the day">
+                <input th:field="*{day}" type="text" name="day" class="form-control" placeholder="Enter the day" th:value="${reserveTime.getDay()}">
             </div>
             <div class="form-group">
                 <label for="startTime">Start time:</label>
-                <input th:field="*{startTime}" type="text" name="startTime" class="form-control" placeholder="Enter the start time">
+                <input th:field="*{startTime}" type="text" name="startTime" class="form-control" placeholder="Enter the start time" th:value="${reserveTime.getStartTime()}">
             </div>
             <div class="form-group">
                 <td><label for="endTime">End Time:</label></td>
-                <td><input th:field="*{endTime}" type="text" name="endTime" class="form-control" placeholder="Enter the end time"></td>
+                <td><input th:field="*{endTime}" type="text" name="endTime" class="form-control" placeholder="Enter the end time" th:value="${reserveTime.getEndTime()}"></td>
             </div>
             <div class="form-group">
                 <td><label for="description">Description:</label></td>
-                <td><input th:field="*{description}" type="text" name="description" class="form-control" placeholder="Enter the description"></td>
+                <td><input th:field="*{description}" type="text" name="description" class="form-control" placeholder="Enter the description" th:value="${reserveTime.getDescription()}"></td>
+            </div>
+            <div class="form-group">
+                <input th:field="*{reserved_timeID}" type="hidden" name="reserveId" class="form-control" th:value="${reserveTime.getReserved_timeID()}">
             </div>
             <div class="form-group">
                 <input type="reset" value="Clear" class="btn btn-primary mb-2"/>
