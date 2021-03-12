@@ -57,7 +57,7 @@
                 }
                 console.log(courses);
                 var courseNum = courses.join(',');
-                window.location.href = ("http://localhost:8080/addPCourse?courseNum=" + courseNum);
+                window.location.href = ("/addPCourse?courseNum=" + courseNum);
             });
             $('.dcourse').click(function (e) {
                 e.preventDefault();
@@ -68,7 +68,7 @@
                 }
                 console.log(courses);
                 var courseNum = courses.join(',');
-                window.location.href = ("http://localhost:8080/addDCourse?courseNum=" + courseNum);
+                window.location.href = ("/addDCourse?courseNum=" + courseNum);
             });
         })
     </script>
