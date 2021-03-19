@@ -1,9 +1,8 @@
 package com.ualr.scheduler.controller;
 
 import com.ualr.scheduler.model.*;
-import com.ualr.scheduler.repository.CoursesRepository;
-import com.ualr.scheduler.repository.RegistrationRepository;
-import com.ualr.scheduler.repository.ReservedTimeRepository;
+import com.ualr.scheduler.repository.*;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -15,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalTime;
+import java.util.*;
 
 @Controller
 public class StudentController {
+    @Autowired
+    ScheduleRepository scheduleRepository;
 
     @Autowired
     CoursesRepository coursesRepository;
@@ -31,6 +30,9 @@ public class StudentController {
 
     @Autowired
     ReservedTimeRepository reservedTimeRepository;
+
+    @Autowired
+    SectionRepository sectionRepository;
 
     //@PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/student",method = RequestMethod.GET)
@@ -155,7 +157,7 @@ public class StudentController {
         check.setStartTime(reservedTime.getStartTime());
         check.setEndTime(reservedTime.getEndTime());
         check.setDescription(reservedTime.getDescription());
-        modelAndView.addObject("message","The course " + check.getReserved_timeID() + " has been updated successfully!");
+        modelAndView.addObject("message","The reserve time " + check.getReserved_timeID() + " has been updated successfully!");
         modelAndView.setViewName("courseRequest");
         reservedTimeRepository.save(check);
         return modelAndView;
@@ -175,33 +177,129 @@ public class StudentController {
         reservedTimeRepository.delete(reservedTime);
         return modelAndView;
     }
+    @RequestMapping("/test")
+    public ModelAndView test(ModelAndView modelAndView){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
+        Set<Schedule> schedules = new HashSet<>();
+        registration.setSchedules(schedules);
+        registrationRepository.save(registration);
+        scheduleRepository.deleteAll();
+        modelAndView.addObject("message","Schedules are cleared");
+        modelAndView.setViewName("courseRequest");
+        return modelAndView;
+    }
 
-    /*@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/generateSchedules", method = RequestMethod.GET)
     public ModelAndView generatingSchedules(ModelAndView modelAndView){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
-        ArrayList<Section> possibleSections = new ArrayList<>();
-        Map<String, Set<ReservedTime>> reservedTimes;
-        Set<ReservedTime> reservedTimeSet = registration.getReservedTimes();
-        for (ReservedTime reservedTime: reservedTimeSet){
-
-        }
+        ArrayList<Section> designatedSections = new ArrayList<>();
         Set<Course> designatedCourses = registration.getDesignatedCourses();
-        for (Course course: designatedCourses){
+        Set<ReservedTime> reservedTimes = registration.getReservedTimes();
+        for (Course course: designatedCourses) {
             for (Section section: course.getSections()){
-               Boolean available = true;
-               for (MeetingTimes meetingTimes: section.getMeetingTime()){
-                   switch (meetingTimes.getDay()){
-                       case "M": break;
-                       case "T": break;
-                       case "W": break;
-
-                   }
-               }
+                designatedSections.add(section);
             }
         }
+        Set<Schedule> schedules = registration.getSchedules();
+        for (int i = 0;i<designatedSections.size();i++){
+            Schedule schedule = new Schedule();
+            schedule.setScheduleName("schedule" + Integer.toString(i+1+schedules.size()));
+            schedule.setRegistration(registration);
+            String sections = scheduling(designatedSections,designatedSections.get(i),reservedTimes);
+            if (schedules.size()>0) {
+                for (Schedule schedule1 : schedules) {
+                    if (!schedule1.getSections().equals(sections.substring(0, sections.length() - 2))) {
+                        schedule.setSections(sections.substring(0, sections.length() - 2));
+                        schedules.add(schedule);
+                    }
+                }
+            } else {
+                schedule.setSections(sections.substring(0, sections.length() - 2));
+                schedules.add(schedule);
+            }
+        }
+        registration.setSchedules(schedules);
+        registrationRepository.save(registration);
+        modelAndView.addObject("message","Schedules are attached");
+        modelAndView.setViewName("courseRequest");
         return modelAndView;
-    }*/
+    }
+
+    public String scheduling(ArrayList<Section> sections,Section section, Set<ReservedTime> reservedTimes){
+        String schedule = "";
+        boolean sectionTime = true;
+        for (MeetingTimes meetingTimes: section.getMeetingTime()) {
+            for (int i = 0; i < meetingTimes.getDay().length(); i++) {
+                for (ReservedTime reservedTime : reservedTimes) {
+                    if ((reservedTime.getDay().indexOf(meetingTimes.getDay().substring(i, i + 1)) != -1) && (sectionTime)){
+                        LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime());
+                        LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime());
+                        LocalTime rStartTime = LocalTime.parse(reservedTime.getStartTime());
+                        LocalTime rEndTime = LocalTime.parse(reservedTime.getEndTime());
+                        if (!(sStartTime.isAfter(rEndTime) || sEndTime.isBefore(rStartTime))) {
+                            sectionTime = false;
+                        }
+                    }
+                }
+            }
+        }
+        if (sectionTime){
+            schedule += (section.getSectionNumber().toString() + ", ");
+        }
+        for (Section possibleSection: sections){
+            Set<Section> scheduledSections = new HashSet<>();
+            for (int i =0;i<schedule.length();i+=5){
+                scheduledSections.add(sectionRepository.findBySectionNumber(Long.parseLong(schedule.substring(i,i+3))));
+            }
+            if (schedule.indexOf(possibleSection.getSectionNumber().toString()) == -1){
+                boolean courseNotIn = true;
+                for (Section ssection: scheduledSections){
+                    if (possibleSection.getCourses().getCourseNumber() == ssection.getCourses().getCourseNumber()){
+                        courseNotIn = false;
+                    }
+
+                }
+                if (courseNotIn){
+                    sectionTime = true;
+                    for (MeetingTimes meetingTimes: possibleSection.getMeetingTime()){
+                        for (int i=0;i<meetingTimes.getDay().length();i++){
+                            for (ReservedTime reservedTime: reservedTimes){
+                                if ((reservedTime.getDay().indexOf(meetingTimes.getDay().substring(i,i+1)) != -1) && (sectionTime)){
+                                    LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime());
+                                    LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime());
+                                    LocalTime rStartTime = LocalTime.parse(reservedTime.getStartTime());
+                                    LocalTime rEndTime = LocalTime.parse(reservedTime.getEndTime());
+                                    if (!(sStartTime.isAfter(rEndTime) || sEndTime.isBefore(rStartTime))){
+                                        sectionTime = false;
+                                    }
+                                }
+                            }
+                            for (Section sSection: scheduledSections){
+                                for (MeetingTimes sMeetingTimes: sSection.getMeetingTime()){
+                                    if ((sMeetingTimes.getDay().indexOf(meetingTimes.getDay().substring(i,i+1)) != -1) && (sectionTime)){
+                                        LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime());
+                                        LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime());
+                                        LocalTime rStartTime = LocalTime.parse(sMeetingTimes.getStartTime());
+                                        LocalTime rEndTime = LocalTime.parse(sMeetingTimes.getEndTime());
+                                        if (!(sStartTime.isAfter(rEndTime) || sEndTime.isBefore(rStartTime))){
+                                            sectionTime = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (sectionTime) {
+                        schedule+=(possibleSection.getSectionNumber().toString()+", ");
+                    }
+                }
+            }
+        }
+        return schedule;
+    }
 }
