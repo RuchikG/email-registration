@@ -1,20 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head>
-    <meta charset="UTF-8">
-    <title>Wossamotta U</title>
-    <th:if sec:authorize="hasRole('ADMIN')">
-        <meta http-equiv="refresh" content="0;URL=/admin">
-    </th:if>
-    <th:if sec:authorize="hasRole('ROOT')">
-        <meta http-equiv="refresh" content="0;URL=/root">
-    </th:if>
-    <th:if sec:authorize="hasRole('STUDENT')">
-        <meta http-equiv="refresh" content="0;URL=/student">
-    </th:if>
-</head>
-<body>
-<h3>This is home page!</h3>
-</body>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Schedule Planner</title>
+		<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+	</head>
+	<body>
+		<header>
+		<div class="main">
+		<div class="logo">
+		<img th:href="@{/img/logo.png}">
+		</div>
+			<ul>
+			<li><a href="/login">LOGIN</a></li>
+			<li><a href="/register">REGISTER</a></li>
+			</ul>
+		</div>
+		<div class="title">
+		<h1>WOSSAMOTTA U</h1>
+		<br>
+		<p>I can see at a glance you're brainy. Why don't you sign in?</p>
+		</div>
+		</header>
+	</body>
 </html>
