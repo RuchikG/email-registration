@@ -206,9 +206,10 @@ public class StudentController {
             }
         }
         Set<Schedule> schedules = registration.getSchedules();
+        int k = 0;
         for (int i = 0;i<designatedSections.size();i++){
             Schedule schedule = new Schedule();
-            schedule.setScheduleName("schedule" + Integer.toString(i+1+schedules.size()));
+            schedule.setScheduleName("schedule" + Integer.toString(k+1+schedules.size()));
             schedule.setRegistration(registration);
             String sections = scheduling(designatedSections,designatedSections.get(i),reservedTimes);
             if (schedules.size()>0) {
@@ -216,6 +217,7 @@ public class StudentController {
                     if (!schedule1.getSections().equals(sections.substring(0, sections.length() - 2))) {
                         schedule.setSections(sections.substring(0, sections.length() - 2));
                         schedules.add(schedule);
+                        k++;
                     }
                 }
             } else {
