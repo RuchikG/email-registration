@@ -4,6 +4,15 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Schedule Planner</title>
+		<th:if sec:authorize="hasRole('ADMIN')">
+			<meta http-equiv="refresh" content="0;URL=/admin">
+		</th:if>
+		<th:if sec:authorize="hasRole('ROOT')">
+			<meta http-equiv="refresh" content="0;URL=/root">
+		</th:if>
+		<th:if sec:authorize="hasRole('STUDENT')">
+			<meta http-equiv="refresh" content="0;URL=/student">
+		</th:if>
 		<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 	</head>
 	<body>
