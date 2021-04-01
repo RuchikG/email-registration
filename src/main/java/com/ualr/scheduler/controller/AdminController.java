@@ -102,8 +102,11 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/addSection",method = RequestMethod.GET)
-    public ModelAndView displayAddSection(ModelAndView modelAndView, Section section){
+    public ModelAndView displayAddSection(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum,Section section){
+        section.setCourses(new Course());
+        section.getCourses().setCourseNumber(Long.parseLong(courseNum));
         modelAndView.addObject("section",section);
+        //modelAndView.addObject("courseNumber",Long.parseLong(courseNum));
         modelAndView.setViewName("addSection");
         return modelAndView;
     }
@@ -165,7 +168,9 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/addMeetingtime",method = RequestMethod.GET)
-    public ModelAndView displayAddMeetingTime(ModelAndView modelAndView, MeetingTimes meetingTimes){
+    public ModelAndView displayAddMeetingTime(ModelAndView modelAndView,@RequestParam("sectionNum")String sectionNum, MeetingTimes meetingTimes){
+        meetingTimes.setSections(new Section());
+        meetingTimes.getSections().setSectionNumber(Long.parseLong(sectionNum));
         modelAndView.addObject("meetingtime",meetingTimes);
         modelAndView.setViewName("addMeetingtime");
         return modelAndView;

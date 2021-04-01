@@ -212,22 +212,26 @@ public class StudentController {
             schedule.setScheduleName("schedule" + Integer.toString(k+1+schedules.size()));
             schedule.setRegistration(registration);
             String sections = scheduling(designatedSections,designatedSections.get(i),reservedTimes);
+            boolean newSchedule = true;
             if (schedules.size()>0) {
                 for (Schedule schedule1 : schedules) {
-                    if (!schedule1.getSections().equals(sections.substring(0, sections.length() - 2))) {
-                        schedule.setSections(sections.substring(0, sections.length() - 2));
-                        schedules.add(schedule);
-                        k++;
+                    if (schedule1.getSections().equals(sections.substring(0, sections.length() - 2))) {
+                        newSchedule = false;
                     }
                 }
             } else {
                 schedule.setSections(sections.substring(0, sections.length() - 2));
                 schedules.add(schedule);
             }
+            if (newSchedule){
+                schedule.setSections(sections.substring(0, sections.length() - 2));
+                schedules.add(schedule);
+                k++;
+            }
         }
         registration.setSchedules(schedules);
         registrationRepository.save(registration);
-        modelAndView.addObject("message","Schedules are attached");
+        modelAndView.addObject("message","Schedules are generated");
         modelAndView.setViewName("courseRequest");
         return modelAndView;
     }

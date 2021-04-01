@@ -53,8 +53,7 @@
                 <td><input th:field="*{instructor}" type="text" name="instructor" class="form-control" placeholder="Enter the instructor name"></td>
             </div>
             <div class="form-group">
-                <label for="courseNo">Course Number:</label>
-                <input th:field="*{courses.courseNumber}" type="text" name="courseNo" class="form-control" placeholder="Enter the course number">
+                <input th:field="*{courses.courseNumber}" type="hidden" name="courseNo" class="form-control" th:value="${section.getCourses().getCourseNumber()}">
             </div>
             <div class="form-group">
                 <input type="reset" value="Clear" class="btn btn-primary mb-2"/>
