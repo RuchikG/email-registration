@@ -44,10 +44,19 @@ public class StudentController {
         Set<Course> possibleCourses = registration.getPossibleCourses();
         Set<ReservedTime> reservedTimes = registration.getReservedTimes();
         List<Course> courses = coursesRepository.findAll();
+        Map<String,ArrayList<Section>> scheduling = new HashMap<>();
+        for (Schedule schedule: registration.getSchedules()){
+            ArrayList<Section> sections = new ArrayList<>();
+            for(int i=0;i<schedule.getSections().length();i+=5){
+                sections.add(sectionRepository.findBySectionNumber(Long.parseLong(schedule.getSections().substring(i,i+3))));
+            }
+            scheduling.put(schedule.getScheduleName(),sections);
+        }
         modelAndView.addObject("courses",courses);
         modelAndView.addObject("possibleCourses",possibleCourses);
         modelAndView.addObject("designatedCourses",designatedCourses);
         modelAndView.addObject("reserveTimes",reservedTimes);
+        modelAndView.addObject("scheduling",scheduling);
         modelAndView.setViewName("student");
         return modelAndView;
     }
@@ -133,10 +142,30 @@ public class StudentController {
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         Set<ReservedTime> reservedTimes = registration.getReservedTimes();
         reservedTime.setRegistration(registration);
-        reservedTimes.add(reservedTime);
-        modelAndView.addObject("message","The reserved time has been added to the user");
-        modelAndView.setViewName("courseRequest");
-        registrationRepository.save(registration);
+        boolean adding = true;
+        for (int i =0; i<reservedTime.getDay().length();i++) {
+            for (ReservedTime rTime : reservedTimes) {
+                if (rTime.getDay().indexOf(reservedTime.getDay().substring(i,i+1)) != -1){
+                   LocalTime rstime = LocalTime.parse(rTime.getStartTime());
+                   LocalTime retime = LocalTime.parse(rTime.getEndTime());
+                   LocalTime reserveStart = LocalTime.parse(reservedTime.getStartTime());
+                   LocalTime reserveEnd = LocalTime.parse(reservedTime.getEndTime());
+                   if (!(reserveStart.isAfter(retime) || reserveEnd.isBefore(rstime))){
+                       adding = false;
+                       break;
+                   }
+                }
+            }
+        }
+        if (adding) {
+            reservedTimes.add(reservedTime);
+            modelAndView.addObject("message", "The reserved time has been added to the user");
+            modelAndView.setViewName("courseRequest");
+            registrationRepository.save(registration);
+        } else {
+            modelAndView.addObject("message", "The reserved time has conflict with another reserve time");
+            modelAndView.setViewName("courseRequest");
+        }
         return modelAndView;
     }
 

@@ -7,6 +7,7 @@
     <title>Student</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <style>
         body{
             padding: 10px;
@@ -16,15 +17,36 @@
             column-gap: 120px;
             padding: 10px;
         }
+        .scheds{
+            border: 1px solid black;
+            column-gap: 120px;
+            margin-bottom: 30px;
+            padding: 10px;
+            width: 100%;
+        }
+
         input[type=checkbox]{
             transform: scale(1.5);
             margin-left: 10px;
+        }
+        .down-caret {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 5px 5px 0 5px;
+            border-color: #000000 transparent transparent transparent;
+            display: inline-block;
+            margin-left: 6px;
+            top: -3px;
+            position: relative;
+            transform: rotate(0deg);
+            transition: all .25s ease-in;
         }
     </style>
 </head>
 <body>
 
-    <a style="float: right; margin-right: 20px;" href="/logout">Logout</a>
+<a style="float: right; margin-right: 20px;" href="/logout">Logout</a>
     <div>
         <h6>Course Catalog:</h6>
         <table class="tab" style="width: 100%">
@@ -156,6 +178,35 @@
         </table>
         <a th:href="@{'/addReserve'}" style="float: right;margin-top: 10px;">
             <button class="btn btn-outline-primary mb-2">Add Reserve Time</button>
+        </a>
+    </div>
+    <div style="margin-top: 80px">
+        <h6 style="margin-bottom: 20px">Schedules: </h6>
+        <th:block th:each="schedule: ${scheduling.keySet()}">
+            <h6 th:text="${schedule}" style="font-weight: bold"> </h6>
+            <table class="scheds">
+                <tr>
+                    <th>Course Name</th>
+                    <th>Instructor</th>
+                    <th>Meeting Days</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+                <th:block th:each="section: ${scheduling.get(schedule)}">
+                    <th:block th:each="meeting: ${section.getMeetingTime()}">
+                        <tr>
+                            <td th:text="${section.getCourses().getCourseTitle()}"></td>
+                            <td th:text="${section.getInstructor()}"></td>
+                            <td th:text="${meeting.getDay()}"></td>
+                            <td th:text="${meeting.getStartTime()}"></td>
+                            <td th:text="${meeting.getEndTime()}"></td>
+                        </tr>
+                    </th:block>
+                </th:block>
+            </table>
+        </th:block>
+        <a th:href="@{'/generateSchedules'}" style="float: right;margin-top: 10px; margin-bottom: 40px">
+            <button class="btn btn-outline-primary mb-2">Generate Schedules</button>
         </a>
     </div>
 </body>

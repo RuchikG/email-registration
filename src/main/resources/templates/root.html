@@ -5,80 +5,85 @@
     <meta charset="UTF-8">
     <title>Root</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
-    <style>
-        body{
-            padding: 10px;
-        }
-        .b{
-            border: 1px solid black;
-            padding: 10px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/root.css}"/>
 </head>
 <body>
-    <a style="float: right; margin-right: 20px;" href="/logout">Logout</a>
-    <div>
-        <h6>Active request queue:</h6>
-        <table style="width: 100%;" class="b" th:if="${requests.size() > 0}">
-            <tr>
-                <th>Username: </th>
-                <th>Access Level: </th>
-                <th></th>
-                <th></th>
-            </tr>
-            <th:block th:each="request: ${requests}">
-                <tr>
-                    <td th:text="${request.getUsername()}"></td>
-                    <td th:text="${request.getRoles()}"></td>
-                    <td>
-                        <a th:href="@{'/activate?username=' + ${request.getUsername()}}">
-                            <button class="btn btn-primary mb-2">Activate</button>
-                        </a>
-                    </td>
-                    <td>
-                        <a th:href="@{'/delete?username=' + ${request.getUsername()}}">
-                            <button class="btn btn-danger mb-2">Delete</button>
-                        </a>
-                    </td>
-                </tr>
-            </th:block>
-        </table>
-        <p th:unless="${requests.size() > 0}">
-            There are no active requests!
-        </p>
+    <div class="header">
+        <div class="logo"><img th:src="@{/img/icon.svg}"></div>
+        <h1>Wossomotta University</h1>
     </div>
-    <div style="margin-top: 20px">
-        <h6>Course Catalog:</h6>
-        <table style="width: 100%;" class="b">
-            <tr>
-                <th>Dept. Id</th>
-                <th>Course Number</th>
-                <th>Course Title</th>
-                <th></th>
-                <th></th>
-            </tr>
+    <div class="navigation">
+        <ul>
+            <li><a href="/logout">LOG OUT</a></li>
+        </ul>
+    </div>
+   <div class="main">
+       <div class="column">
+           <h2>Active Request Queue</h2>
+           <table class="b">
+               <tbody>
+               <tr>
+                   <th>Username</th>
+                   <th>Access Level</th>
+                   <th></th>
+                   <th></th>
+                   <th></th>
+               </tr>
+               <th:block th:each="request: ${requests}">
+                   <tr>
+                       <td th:text="${request.getUsername()}"></td>
+                       <td th:text="${request.getRoles()}"></td>
+                       <td>
+                           <a th:href="@{'/activate?username=' + ${request.getUsername()}}">
+                               <button class="button">ACCEPT</button>
+                           </a>
+                       </td>
+                       <td>
+                           <a th:href="@{'/delete?username=' + ${request.getUsername()}}">
+                               <button class="button">DECLINE</button>
+                           </a>
+                       </td>
+                   </tr>
+               </th:block>
+               </tbody>
+           </table>
+           <p th:unless="${requests.size() > 0}">
+               There are no active requests!
+           </p>
+       </div>
+       <div class="second">
+           <h2>Course Catalog</h2>
+           <table class="b">
+                <tbody>
+                <tr>
+                    <th>Dept. Id</th>
+                    <th>Course Number</th>
+                    <th>Course Title</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <th:block th:each="course: ${courses}">
+                    <tr>
+                        <td th:text="${course.getDeptId()}"></td>
+                        <td th:text="${course.getCourseNumber()}"></td>
+                        <td><a th:href="@{'/course?courseNum=' + ${course.getCourseNumber()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none;"></a></td>
+                        <td>
+                            <a th:href="@{'/editCourse?courseNum=' + ${course.getCourseNumber()}}">
+                                <button class="button">EDIT</button>
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="@{'/deleteCourse?courseNum=' + ${course.getCourseNumber()}}">
+                                <button class="button">DELETE</button>
+                            </a>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+           </table>
+           <button th:href="@{'/addCourse'}" class="button addcourse">ADD COURSE</button>
+       </div>
+   </div>
 
-            <th:block th:each="course: ${courses}">
-                <tr>
-                    <td th:text="${course.getDeptId()}"></td>
-                    <td th:text="${course.getCourseNumber()}"></td>
-                    <td><a th:href="@{'/course?courseNum=' + ${course.getCourseNumber()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
-                    <td>
-                        <a th:href="@{'/editCourse?courseNum=' + ${course.getCourseNumber()}}">
-                            <button class="btn btn-primary mb-2">Edit</button>
-                        </a>
-                    </td>
-                    <td>
-                        <a th:href="@{'/deleteCourse?courseNum=' + ${course.getCourseNumber()}}">
-                            <button class="btn btn-danger mb-2">Delete</button>
-                        </a>
-                    </td>
-                </tr>
-            </th:block>
-        </table>
-    </div>
-    <a th:href="@{'/addCourse'}" style="float: right;margin-top: 10px;">
-        <button class="btn btn-outline-primary mb-2">Add Course</button>
-    </a>
 </body>
 </html>
