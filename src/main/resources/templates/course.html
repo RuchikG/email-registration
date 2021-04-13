@@ -38,15 +38,15 @@
 
             <th:block th:each="section: ${sections}">
                 <tr>
-                    <td><a th:href="@{'/section?sectionNum=' + ${section.getSectionNumber()}}" th:text="${section.getSectionNumber()}" style="text-decoration: none; color: black"></a></td>
+                    <td><a th:href="@{'/section?sectionId=' + ${section.getSectionid()}}" th:text="${section.getSectionNumber()}" style="text-decoration: none; color: black"></a></td>
                     <td th:text="${section.getInstructor()}"></td>
                     <td sec:authorize="hasAnyRole('ROOT','ADMIN')">
-                        <a th:href="@{'/editSection?sectionNum=' + ${section.getSectionNumber()}}">
+                        <a th:href="@{'/editSection?sectionId=' + ${section.getSectionid()}}">
                             <button class="btn btn-primary mb-2">Edit</button>
                         </a>
                     </td>
                     <td sec:authorize="hasAnyRole('ROOT','ADMIN')">
-                        <a th:href="@{'/deleteSection?sectionNum=' + ${section.getSectionNumber()}}">
+                        <a th:href="@{'/deleteSection?sectionId=' + ${section.getSectionid()}}">
                             <button class="btn btn-danger mb-2">Delete</button>
                         </a>
                     </td>

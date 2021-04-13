@@ -164,8 +164,8 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/section", method = RequestMethod.GET)
-    public ModelAndView viewSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
-        Section section = sectionRepository.findBySectionNumber(sectionNum);
+    public ModelAndView viewSection(ModelAndView modelAndView, @RequestParam("sectionId")String sectionId){
+        Section section = sectionRepository.findBySectionid(Long.decode(sectionId));
         Set<MeetingTimes> meetingTimes = section.getMeetingTime();
         modelAndView.addObject("section",section);
         modelAndView.addObject("meetingTimes",meetingTimes);
@@ -283,7 +283,6 @@ public class AdminController {
                 while ((record = reader.readNext()) != null){
                     Course course = coursesRepository.findByCourseNumberAndDeptIdAndCourseTitle(Long.decode(record[1]),record[0],record[2]);
                     Section section = new Section(record[3],course,record[4]);
-                    section.setSectionid((long) 0);
                     sections.add(section);
                     if (record[5].indexOf(",") != -1){
                         String[] period = record[5].split(",");
