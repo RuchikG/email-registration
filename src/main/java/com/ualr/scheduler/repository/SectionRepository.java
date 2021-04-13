@@ -5,7 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository()
-public interface SectionRepository extends CrudRepository<Section,Long> {
-    Section findBySectionNumber(Long sectionNumber);
-    Section findBySectionid(Long sectionId);
+public interface SectionRepository extends CrudRepository<Section,String> {
+    Section findBySectionNumber(String sectionNumber);
 }

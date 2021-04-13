@@ -1,5 +1,7 @@
 package com.ualr.scheduler.model;
 
+import com.opencsv.bean.CsvBindByName;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,12 +13,15 @@ public class Course {
     @Column(name = "course_id")
     private Long courseid;
 
+    @CsvBindByName
     @Column(name = "course_number")
     private Long courseNumber;
 
+    @CsvBindByName(column = "deptID")
     @Column(name = "dept_id")
     private String deptId;
 
+    @CsvBindByName
     @Column(name = "course_title")
     private String courseTitle;
 
@@ -30,6 +35,12 @@ public class Course {
     private Set<Registration> registrationSet;
 
     public Course() {
+    }
+
+    public Course(String deptId, long courseNumber, String courseTitle){
+        this.deptId = deptId;
+        this.courseNumber = courseNumber;
+        this.courseTitle = courseTitle;
     }
 
     public Long getCourseid() {

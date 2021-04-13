@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -48,7 +49,7 @@ public class StudentController {
         for (Schedule schedule: registration.getSchedules()){
             ArrayList<Section> sections = new ArrayList<>();
             for(int i=0;i<schedule.getSections().length();i+=5){
-                sections.add(sectionRepository.findBySectionNumber(Long.parseLong(schedule.getSections().substring(i,i+3))));
+                sections.add(sectionRepository.findBySectionNumber(schedule.getSections().substring(i,i+3)));
             }
             scheduling.put(schedule.getScheduleName(),sections);
         }
@@ -146,10 +147,10 @@ public class StudentController {
         for (int i =0; i<reservedTime.getDay().length();i++) {
             for (ReservedTime rTime : reservedTimes) {
                 if (rTime.getDay().indexOf(reservedTime.getDay().substring(i,i+1)) != -1){
-                   LocalTime rstime = LocalTime.parse(rTime.getStartTime());
-                   LocalTime retime = LocalTime.parse(rTime.getEndTime());
-                   LocalTime reserveStart = LocalTime.parse(reservedTime.getStartTime());
-                   LocalTime reserveEnd = LocalTime.parse(reservedTime.getEndTime());
+                   LocalTime rstime = LocalTime.parse(rTime.getStartTime().toUpperCase(), DateTimeFormatter.ofPattern("hh:mma"));
+                   LocalTime retime = LocalTime.parse(rTime.getEndTime().toUpperCase(), DateTimeFormatter.ofPattern("hh:mma"));
+                   LocalTime reserveStart = LocalTime.parse(reservedTime.getStartTime().toUpperCase(), DateTimeFormatter.ofPattern("hh:mma"));
+                   LocalTime reserveEnd = LocalTime.parse(reservedTime.getEndTime().toUpperCase(), DateTimeFormatter.ofPattern("hh:mma"));
                    if (!(reserveStart.isAfter(retime) || reserveEnd.isBefore(rstime))){
                        adding = false;
                        break;
@@ -208,14 +209,10 @@ public class StudentController {
     }
     @RequestMapping("/test")
     public ModelAndView test(ModelAndView modelAndView){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
-        Set<Schedule> schedules = new HashSet<>();
-        registration.setSchedules(schedules);
+        Registration registration = registrationRepository.findByUsernameIgnoreCase("root");
+        registration.setEnabled(true);
         registrationRepository.save(registration);
-        scheduleRepository.deleteAll();
-        modelAndView.addObject("message","Schedules are cleared");
+        modelAndView.addObject("message","Root is enabled");
         modelAndView.setViewName("courseRequest");
         return modelAndView;
     }
@@ -272,10 +269,10 @@ public class StudentController {
             for (int i = 0; i < meetingTimes.getDay().length(); i++) {
                 for (ReservedTime reservedTime : reservedTimes) {
                     if ((reservedTime.getDay().indexOf(meetingTimes.getDay().substring(i, i + 1)) != -1) && (sectionTime)){
-                        LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime());
-                        LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime());
-                        LocalTime rStartTime = LocalTime.parse(reservedTime.getStartTime());
-                        LocalTime rEndTime = LocalTime.parse(reservedTime.getEndTime());
+                        LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
+                        LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
+                        LocalTime rStartTime = LocalTime.parse(reservedTime.getStartTime().toUpperCase(), DateTimeFormatter.ofPattern("hh:mma"));
+                        LocalTime rEndTime = LocalTime.parse(reservedTime.getEndTime().toUpperCase(), DateTimeFormatter.ofPattern("hh:mma"));
                         if (!(sStartTime.isAfter(rEndTime) || sEndTime.isBefore(rStartTime))) {
                             sectionTime = false;
                         }
@@ -289,7 +286,7 @@ public class StudentController {
         for (Section possibleSection: sections){
             Set<Section> scheduledSections = new HashSet<>();
             for (int i =0;i<schedule.length();i+=5){
-                scheduledSections.add(sectionRepository.findBySectionNumber(Long.parseLong(schedule.substring(i,i+3))));
+                scheduledSections.add(sectionRepository.findBySectionNumber(schedule.substring(i,i+3)));
             }
             if (schedule.indexOf(possibleSection.getSectionNumber().toString()) == -1){
                 boolean courseNotIn = true;
@@ -305,10 +302,10 @@ public class StudentController {
                         for (int i=0;i<meetingTimes.getDay().length();i++){
                             for (ReservedTime reservedTime: reservedTimes){
                                 if ((reservedTime.getDay().indexOf(meetingTimes.getDay().substring(i,i+1)) != -1) && (sectionTime)){
-                                    LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime());
-                                    LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime());
-                                    LocalTime rStartTime = LocalTime.parse(reservedTime.getStartTime());
-                                    LocalTime rEndTime = LocalTime.parse(reservedTime.getEndTime());
+                                    LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
+                                    LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
+                                    LocalTime rStartTime = LocalTime.parse(reservedTime.getStartTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
+                                    LocalTime rEndTime = LocalTime.parse(reservedTime.getEndTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
                                     if (!(sStartTime.isAfter(rEndTime) || sEndTime.isBefore(rStartTime))){
                                         sectionTime = false;
                                     }
@@ -317,10 +314,10 @@ public class StudentController {
                             for (Section sSection: scheduledSections){
                                 for (MeetingTimes sMeetingTimes: sSection.getMeetingTime()){
                                     if ((sMeetingTimes.getDay().indexOf(meetingTimes.getDay().substring(i,i+1)) != -1) && (sectionTime)){
-                                        LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime());
-                                        LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime());
-                                        LocalTime rStartTime = LocalTime.parse(sMeetingTimes.getStartTime());
-                                        LocalTime rEndTime = LocalTime.parse(sMeetingTimes.getEndTime());
+                                        LocalTime sStartTime = LocalTime.parse(meetingTimes.getStartTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
+                                        LocalTime sEndTime = LocalTime.parse(meetingTimes.getEndTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
+                                        LocalTime rStartTime = LocalTime.parse(sMeetingTimes.getStartTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
+                                        LocalTime rEndTime = LocalTime.parse(sMeetingTimes.getEndTime().toUpperCase(),DateTimeFormatter.ofPattern("hh:mma"));
                                         if (!(sStartTime.isAfter(rEndTime) || sEndTime.isBefore(rStartTime))){
                                             sectionTime = false;
                                         }

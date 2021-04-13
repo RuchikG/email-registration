@@ -1,21 +1,28 @@
 package com.ualr.scheduler.controller;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.ualr.scheduler.model.Course;
 import com.ualr.scheduler.model.MeetingTimes;
 import com.ualr.scheduler.model.Section;
 import com.ualr.scheduler.repository.CoursesRepository;
 import com.ualr.scheduler.repository.MeetingtimeRepository;
-import com.ualr.scheduler.repository.RegistrationRepository;
 import com.ualr.scheduler.repository.SectionRepository;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -126,7 +133,7 @@ public class AdminController {
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/editSection",method = RequestMethod.GET)
     public ModelAndView displayEditSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
-        Section section = sectionRepository.findBySectionNumber(Long.decode(sectionNum));
+        Section section = sectionRepository.findBySectionNumber(sectionNum);
         modelAndView.addObject("section",section);
         modelAndView.setViewName("editSection");
         return modelAndView;
@@ -135,7 +142,7 @@ public class AdminController {
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/editSection",method = RequestMethod.POST)
     public ModelAndView editSection(ModelAndView modelAndView, Section section){
-        Section check = sectionRepository.findBySectionid(section.getSectionid());
+        Section check = sectionRepository.findBySectionNumber(section.getSectionNumber());
         check.setSectionNumber(section.getSectionNumber());
         check.setInstructor(section.getInstructor());
         modelAndView.addObject("message","The section has been updated successfully!");
@@ -147,7 +154,7 @@ public class AdminController {
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/deleteSection", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView deleteSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
-        Section section = sectionRepository.findBySectionNumber(Long.decode(sectionNum));
+        Section section = sectionRepository.findBySectionNumber(sectionNum);
         modelAndView.addObject("message","The section has been deleted successfully!");
         modelAndView.setViewName("courseRequest");
         section.getCourses().getSections().remove(section);
@@ -158,7 +165,7 @@ public class AdminController {
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/section", method = RequestMethod.GET)
     public ModelAndView viewSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
-        Section section = sectionRepository.findBySectionNumber(Long.decode(sectionNum));
+        Section section = sectionRepository.findBySectionNumber(sectionNum);
         Set<MeetingTimes> meetingTimes = section.getMeetingTime();
         modelAndView.addObject("section",section);
         modelAndView.addObject("meetingTimes",meetingTimes);
@@ -170,7 +177,7 @@ public class AdminController {
     @RequestMapping(value = "/addMeetingtime",method = RequestMethod.GET)
     public ModelAndView displayAddMeetingTime(ModelAndView modelAndView,@RequestParam("sectionNum")String sectionNum, MeetingTimes meetingTimes){
         meetingTimes.setSections(new Section());
-        meetingTimes.getSections().setSectionNumber(Long.parseLong(sectionNum));
+        meetingTimes.getSections().setSectionNumber(sectionNum);
         modelAndView.addObject("meetingtime",meetingTimes);
         modelAndView.setViewName("addMeetingtime");
         return modelAndView;
@@ -179,9 +186,11 @@ public class AdminController {
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/addMeetingtime",method = RequestMethod.POST)
     public ModelAndView addMeetingTime(ModelAndView modelAndView, MeetingTimes meetingTimes){
-        Long sectionNum = meetingTimes.getSections().getSectionNumber();
+        String sectionNum = meetingTimes.getSections().getSectionNumber();
         Section section = sectionRepository.findBySectionNumber(sectionNum);
         meetingTimes.setSections(section);
+        meetingTimes.setStartTime(meetingTimes.getStartTime());
+        meetingTimes.setEndTime(meetingTimes.getEndTime());
         modelAndView.addObject("message","The meeting time has been added successfully!");
         modelAndView.setViewName("courseRequest");
         meetingtimeRepository.save(meetingTimes);
@@ -218,6 +227,92 @@ public class AdminController {
         modelAndView.setViewName("courseRequest");
         meetingTimes.getSections().getMeetingTime().remove(meetingTimes);
         meetingtimeRepository.delete(meetingTimes);
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/uploadCourseFile", method = RequestMethod.GET)
+    public ModelAndView displayFileUpload(ModelAndView modelAndView){
+        modelAndView.setViewName("courseFileUpload");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/uploadCourseFile", method = RequestMethod.POST)
+    public ModelAndView fileUploadCourse(ModelAndView modelAndView, @RequestParam("file") MultipartFile file){
+        if (file.isEmpty()){
+            modelAndView.addObject("message", "Please select a CSV file to upload.");
+            modelAndView.setViewName("courseRequest");
+        } else {
+            try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+                CsvToBean<Course> csvToBean = new CsvToBeanBuilder(reader)
+                                                    .withType(Course.class)
+                                                    .withIgnoreLeadingWhiteSpace(true)
+                                                    .build();
+                List<Course> courses = csvToBean.parse();
+                coursesRepository.saveAll(courses);
+                modelAndView.addObject("message","All the courses have been added to the catalog");
+                modelAndView.setViewName("courseRequest");
+            } catch (Exception ex){
+                modelAndView.addObject("message", "An error occurred while processing the CSV file");
+                modelAndView.setViewName("courseRequest");
+            }
+        }
+
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/uploadSectionFile", method = RequestMethod.GET)
+    public ModelAndView displaySectionUpload(ModelAndView modelAndView){
+        modelAndView.setViewName("sectionFileUpload");
+        return modelAndView;
+    }
+
+    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/uploadSectionFile", method = RequestMethod.POST)
+    public ModelAndView fileUploadSection(ModelAndView modelAndView, @RequestParam("file") MultipartFile file){
+        if (file.isEmpty()){
+            modelAndView.addObject("message", "Please select a CSV file to upload.");
+            modelAndView.setViewName("courseRequest");
+        } else {
+            try (CSVReader reader = new CSVReaderBuilder(new InputStreamReader(file.getInputStream())).withSkipLines(1).build()){
+                String[] record;
+                List<Section> sections = new ArrayList<>();
+                List<MeetingTimes> meetingTimes = new ArrayList<>();
+                while ((record = reader.readNext()) != null){
+                    Course course = coursesRepository.findByCourseNumberAndDeptIdAndCourseTitle(Long.decode(record[1]),record[0],record[2]);
+                    Section section = new Section(record[3],course,record[4]);
+                    section.setSectionid((long) 0);
+                    sections.add(section);
+                    if (record[5].indexOf(",") != -1){
+                        String[] period = record[5].split(",");
+                        for (int i = 0; i < period.length; i++){
+                            String t = period[i];
+                            if (i > 0){
+                                t = t.substring(1);
+                            }
+                            String[] time = t.split(" ");
+                            String[] timing = time[1].split("-");
+                            MeetingTimes m = new MeetingTimes(time[0],timing[0],timing[1],section);
+                            meetingTimes.add(m);
+                        }
+                    } else {
+                        String[] time = record[5].split(" ");
+                        String[] timing = time[1].split("-");
+                        MeetingTimes m = new MeetingTimes(time[0],timing[0],timing[1],section);
+                        meetingTimes.add(m);
+                    }
+                }
+                sectionRepository.saveAll(sections);
+                meetingtimeRepository.saveAll(meetingTimes);
+                modelAndView.addObject("message","All the sections have been added to the catalog");
+                modelAndView.setViewName("courseRequest");
+            }catch (Exception ex){
+                modelAndView.addObject("message", "An error occurred while processing the CSV file");
+                modelAndView.setViewName("courseRequest");
+            }
+        }
         return modelAndView;
     }
 }

@@ -23,6 +23,13 @@ public class MeetingTimes {
     public MeetingTimes() {
     }
 
+    public MeetingTimes(String day, String startTime, String endTime, Section section) {
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.section = section;
+    }
+
     public Long getMeetingId() {
         return meetingId;
     }
