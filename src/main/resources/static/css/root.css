@@ -118,18 +118,50 @@ html {
 	
 
 }
-	
+
 table.b {
 	margin-top: 10px;
-	display: table;
     border-spacing: 2px;
-	width:100%; 
+	width:100%;
     padding: 10px;
 	text-align:center;
 }
 
+table.scroll{
+	margin-top: 10px;
+	border-spacing: 2px;
+	width:100%;
+	padding: 10px;
+	text-align:center;
+}
+
+table.scroll tbody, table.scroll thead{
+	display: block;
+}
+
+table.scroll tbody{
+	height: 50vh;
+	overflow-y: auto;
+}
+
+table.scroll tbody td, table.scroll thead th{
+	width: 20%;
+}
+
+table.scroll, th, td{
+	border: 1px solid #DAA520;
+	border-collapse: collapse;
+	color: #DAA520;
+}
+
+table.b, th, td {
+	border: 1px solid #DAA520;
+	border-collapse: collapse;
+	color: #DAA520;
+}
+
 th {
-	padding-bottom: 20px;
+	padding: 10px;
 }
 
 .second table tr td a {
@@ -138,22 +170,46 @@ th {
 
 .addcourse {
 	margin-top: 10px;
-	margin-right: 30px;
 	float:right;
 }
 
+.upload{
+	margin-top: 10px;
+	float:right;
+	margin-right: 20px;
+}
+
 button {
+	margin-top: 10px;
 	border-style: solid;
 	border-width:1px;
-	border-color: #DAA520;
+	border-color: rgba(0, 37, 80, 0.7);;
 	background-color:white;
-	color:#DAA520;
+	color: rgba(0, 37, 80, 0.7);
 	transition: 0.6s ease;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 	padding: 5px;
 }
 
 button:hover {
 	color:white;
-	background-color:#DAA520;
+	background-color:rgba(0, 37, 80, 0.7);;
+}
+
+.deletebtn{
+	margin-top: 10px;
+	border-style: solid;
+	border-width:1px;
+	border-color: red;
+	background-color:white;
+	color:red;
+	transition: 0.6s ease;
+	padding: 5px;
+	margin-bottom: 10px;
+
+}
+
+.deletebtn:hover {
+	color:white;
+	background-color:red;
 }

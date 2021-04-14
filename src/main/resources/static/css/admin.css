@@ -1,0 +1,168 @@
+*{
+    margin:0;
+    padding:0;
+    font-family: Century Gothic;
+}
+
+html {
+    background: white ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+
+.header {
+    height: auto;
+    padding:5px;
+    background-size:cover;
+    width: 100%;
+    background: rgba(0, 37, 80, 0.7);
+
+
+}
+
+.logo img{
+    width: 130px;
+    margin-top: 10px;
+    float:left;
+    padding: 10px;
+    height: auto;
+}
+
+.header h1 {
+    color: #fff;
+    float:left;
+    padding: 30px;
+}
+
+.header::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.navigation ul{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    max-width: 3000px;
+    float: right;
+    list-style-type: none;
+
+}
+
+
+.navigation ul li{
+    display: inline-block;
+}
+
+.navigation ul li a{
+    text-decoration: none;
+    color: #DAA520;
+    padding: 5px 20px;
+    margin-right: 20px;
+    border: 1px solid #DAA520;
+    transition: 0.6s ease;
+}
+
+.navigation ul li a:hover{
+    background-color: #DAA520;
+    color: #000;
+}
+
+.navigation
+{
+    background: rgba(0, 0, 0, 0.7);
+    background-size: cover;
+    width: 100%;
+    padding: 5px;
+    border-top-color: black;
+    border-bottom-color: black;
+
+}
+
+.navigation h1 {
+    margin-left:10px;
+    float:left;
+    color:white;
+    font-size: 20px;
+}
+
+.navigation::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.addcourse {
+    margin-top: 10px;
+    margin-left: 10px;
+    float:left;
+}
+
+.upload{
+    margin-top: 10px;
+    float:left;
+    margin-left: 20px;
+}
+
+table.scrolling{
+    margin: 10px 10px 0px;
+    border-spacing: 2px;
+    width:55%;
+    padding: 10px;
+    text-align:center;
+}
+
+table.scrolling tbody, table.scrolling thead{
+    display: block;
+}
+
+table.scrolling tbody{
+    height: 70vh;
+    overflow-y: auto;
+}
+
+ table.scrolling tbody td, table.scrolling thead th{
+    width: 19%;
+}
+
+table.scrolling, th, td{
+    border: 1px solid #DAA520;
+    border-collapse: collapse;
+    color: #DAA520;
+}
+
+button {
+    margin-top: 10px;
+    border-style: solid;
+    border-width:1px;
+    border-color: rgba(0, 37, 80, 0.7);;
+    background-color:white;
+    color: rgba(0, 37, 80, 0.7);
+    transition: 0.6s ease;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+button:hover {
+    color:white;
+    background-color:rgba(0, 37, 80, 0.7);;
+}
+
+.deletebtn{
+    margin-top: 10px;
+    border-style: solid;
+    border-width:1px;
+    border-color: red;
+    background-color:white;
+    color:red;
+    transition: 0.6s ease;
+    padding: 5px;
+    margin-bottom: 10px;
+
+}
+
+.deletebtn:hover {
+    color:white;
+    background-color:red;
+}

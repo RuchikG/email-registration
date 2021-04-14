@@ -66,8 +66,8 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/editCourse",method = RequestMethod.GET)
-    public ModelAndView displayEditCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
-        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+    public ModelAndView displayEditCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
+        Course course = coursesRepository.findByCourseid(Long.decode(courseId));
         modelAndView.addObject("course",course);
         modelAndView.setViewName("editCourse");
         return modelAndView;
@@ -88,8 +88,8 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/deleteCourse", method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView deleteCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
-        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+    public ModelAndView deleteCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
+        Course course = coursesRepository.findByCourseid(Long.decode(courseId));
         modelAndView.addObject("message","The course " + course.getCourseTitle() + " has been deleted successfully!");
         modelAndView.setViewName("courseRequest");
         coursesRepository.delete(course);
@@ -98,8 +98,8 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/course", method = RequestMethod.GET)
-    public ModelAndView viewCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
-        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+    public ModelAndView viewCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
+        Course course = coursesRepository.findByCourseid(Long.decode(courseId));
         Set<Section> sections = course.getSections();
         modelAndView.addObject("course",course);
         modelAndView.addObject("sections",sections);
@@ -109,9 +109,9 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/addSection",method = RequestMethod.GET)
-    public ModelAndView displayAddSection(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum,Section section){
+    public ModelAndView displayAddSection(ModelAndView modelAndView, @RequestParam("courseId")String courseId,Section section){
         section.setCourses(new Course());
-        section.getCourses().setCourseNumber(Long.parseLong(courseNum));
+        section.getCourses().setCourseid(Long.parseLong(courseId));
         modelAndView.addObject("section",section);
         //modelAndView.addObject("courseNumber",Long.parseLong(courseNum));
         modelAndView.setViewName("addSection");
@@ -121,8 +121,8 @@ public class AdminController {
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/addSection",method = RequestMethod.POST)
     public ModelAndView addSection(ModelAndView modelAndView, Section section){
-        Long courseNum = section.getCourses().getCourseNumber();
-        Course course = coursesRepository.findByCourseNumber(courseNum);
+        Long courseId = section.getCourses().getCourseid();
+        Course course = coursesRepository.findByCourseid(courseId);
         section.setCourses(course);
         modelAndView.addObject("message","The section has been added successfully!");
         modelAndView.setViewName("courseRequest");
@@ -132,8 +132,8 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/editSection",method = RequestMethod.GET)
-    public ModelAndView displayEditSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
-        Section section = sectionRepository.findBySectionNumber(sectionNum);
+    public ModelAndView displayEditSection(ModelAndView modelAndView, @RequestParam("sectionId")String sectionId){
+        Section section = sectionRepository.findBySectionid(Long.decode(sectionId));
         modelAndView.addObject("section",section);
         modelAndView.setViewName("editSection");
         return modelAndView;
@@ -142,7 +142,7 @@ public class AdminController {
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/editSection",method = RequestMethod.POST)
     public ModelAndView editSection(ModelAndView modelAndView, Section section){
-        Section check = sectionRepository.findBySectionNumber(section.getSectionNumber());
+        Section check = sectionRepository.findBySectionid(section.getSectionid());
         check.setSectionNumber(section.getSectionNumber());
         check.setInstructor(section.getInstructor());
         modelAndView.addObject("message","The section has been updated successfully!");
@@ -153,8 +153,8 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/deleteSection", method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView deleteSection(ModelAndView modelAndView, @RequestParam("sectionNum")String sectionNum){
-        Section section = sectionRepository.findBySectionNumber(sectionNum);
+    public ModelAndView deleteSection(ModelAndView modelAndView, @RequestParam("sectionId")String sectionId){
+        Section section = sectionRepository.findBySectionid(Long.decode(sectionId));
         modelAndView.addObject("message","The section has been deleted successfully!");
         modelAndView.setViewName("courseRequest");
         section.getCourses().getSections().remove(section);
@@ -175,9 +175,9 @@ public class AdminController {
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/addMeetingtime",method = RequestMethod.GET)
-    public ModelAndView displayAddMeetingTime(ModelAndView modelAndView,@RequestParam("sectionNum")String sectionNum, MeetingTimes meetingTimes){
+    public ModelAndView displayAddMeetingTime(ModelAndView modelAndView,@RequestParam("sectionId")String sectionId, MeetingTimes meetingTimes){
         meetingTimes.setSections(new Section());
-        meetingTimes.getSections().setSectionNumber(sectionNum);
+        meetingTimes.getSections().setSectionid(Long.decode(sectionId));
         modelAndView.addObject("meetingtime",meetingTimes);
         modelAndView.setViewName("addMeetingtime");
         return modelAndView;
@@ -186,8 +186,8 @@ public class AdminController {
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/addMeetingtime",method = RequestMethod.POST)
     public ModelAndView addMeetingTime(ModelAndView modelAndView, MeetingTimes meetingTimes){
-        String sectionNum = meetingTimes.getSections().getSectionNumber();
-        Section section = sectionRepository.findBySectionNumber(sectionNum);
+        Long sectionid = meetingTimes.getSections().getSectionid();
+        Section section = sectionRepository.findBySectionid(sectionid);
         meetingTimes.setSections(section);
         meetingTimes.setStartTime(meetingTimes.getStartTime());
         meetingTimes.setEndTime(meetingTimes.getEndTime());

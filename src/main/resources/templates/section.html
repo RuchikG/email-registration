@@ -54,7 +54,7 @@
             </tr>
         </th:block>
     </table>
-    <a sec:authorize="hasAnyRole('ROOT','ADMIN')" th:href="@{'/addMeetingtime?sectionNum=' + ${section.getSectionNumber()}}" style="float: right;margin-top: 10px;">
+    <a sec:authorize="hasAnyRole('ROOT','ADMIN')" th:href="@{'/addMeetingtime?sectionId=' + ${section.getSectionid()}}" style="float: right;margin-top: 10px;">
         <button class="btn btn-outline-primary mb-2">Add Meeting Time</button>
     </a>
 </div>

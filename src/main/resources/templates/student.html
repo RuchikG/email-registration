@@ -29,19 +29,6 @@
             transform: scale(1.5);
             margin-left: 10px;
         }
-        .down-caret {
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 5px 5px 0 5px;
-            border-color: #000000 transparent transparent transparent;
-            display: inline-block;
-            margin-left: 6px;
-            top: -3px;
-            position: relative;
-            transform: rotate(0deg);
-            transition: all .25s ease-in;
-        }
     </style>
 </head>
 <body>
@@ -59,10 +46,10 @@
 
             <th:block th:each="course: ${courses}">
                 <tr>
-                    <td style="margin-left: 10px;"><input type="checkbox" class="includePCheck" th:value="${course.getCourseNumber()}"></td>
+                    <td style="margin-left: 10px;"><input type="checkbox" class="includePCheck" th:value="${course.getCourseid()}"></td>
                     <td th:text="${course.getDeptId()}"></td>
                     <td th:text="${course.getCourseNumber()}"></td>
-                    <td><a th:href="@{'/course?courseNum=' + ${course.getCourseNumber()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
+                    <td><a th:href="@{'/course?courseId=' + ${course.getCourseid()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
                 </tr>
             </th:block>
         </table>
@@ -78,8 +65,8 @@
                     courses.push(input.value);
                 }
                 console.log(courses);
-                var courseNum = courses.join(',');
-                window.location.href = ("/addPCourse?courseNum=" + courseNum);
+                var courseId = courses.join(',');
+                window.location.href = ("/addPCourse?courseId=" + courseId);
             });
             $('.dcourse').click(function (e) {
                 e.preventDefault();
@@ -89,8 +76,8 @@
                     courses.push(input.value);
                 }
                 console.log(courses);
-                var courseNum = courses.join(',');
-                window.location.href = ("/addDCourse?courseNum=" + courseNum);
+                var courseId = courses.join(',');
+                window.location.href = ("/addDCourse?courseId=" + courseId);
             });
         })
     </script>
@@ -107,12 +94,12 @@
 
             <th:block th:each="pcourse: ${possibleCourses}">
                 <tr>
-                    <td style="margin-left: 10px;"><input type="checkbox" class="includeDCheck" th:value="${pcourse.getCourseNumber()}"></td>
+                    <td style="margin-left: 10px;"><input type="checkbox" class="includeDCheck" th:value="${pcourse.getCourseid()}"></td>
                     <td th:text="${pcourse.getDeptId()}"></td>
                     <td th:text="${pcourse.getCourseNumber()}"></td>
-                    <td><a th:href="@{'/course?courseNum=' + ${pcourse.getCourseNumber()}}" th:text="${pcourse.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
+                    <td><a th:href="@{'/course?courseId=' + ${pcourse.getCourseid()}}" th:text="${pcourse.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
                     <td>
-                        <a th:href="@{'/deletePCourse?courseNum=' + ${pcourse.getCourseNumber()}}">
+                        <a th:href="@{'/deletePCourse?courseId=' + ${pcourse.getCourseid()}}">
                             <button class="btn btn-danger mb-2">Delete</button>
                         </a>
                     </td>
@@ -135,9 +122,9 @@
                 <tr>
                     <td th:text="${dcourse.getDeptId()}"></td>
                     <td th:text="${dcourse.getCourseNumber()}"></td>
-                    <td><a th:href="@{'/course?courseNum=' + ${dcourse.getCourseNumber()}}" th:text="${dcourse.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
+                    <td><a th:href="@{'/course?courseId=' + ${dcourse.getCourseid()}}" th:text="${dcourse.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
                     <td>
-                        <a th:href="@{'/deleteDCourse?courseNum=' + ${dcourse.getCourseNumber()}}">
+                        <a th:href="@{'/deleteDCourse?courseId=' + ${dcourse.getCourseid()}}">
                             <button class="btn btn-danger mb-2">Delete</button>
                         </a>
                     </td>

@@ -57,7 +57,7 @@
                 <input th:field="*{endTime}" type="text" name="endTime" class="form-control" placeholder="Enter the end time">
             </div>
             <div class="form-group">
-                <input th:field="*{sections.sectionNumber}" type="hidden" name="sectionNo" class="form-control" th:value="${meetingtime.getSections().getSectionNumber()}">
+                <input th:field="*{sections.sectionid}" type="hidden" name="sectionNo" class="form-control" th:value="${meetingtime.getSections().getSectionid()}">
             </div>
             <div class="form-group">
                 <input type="reset" value="Clear" class="btn btn-primary mb-2"/>

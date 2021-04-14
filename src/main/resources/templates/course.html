@@ -53,7 +53,7 @@
                 </tr>
             </th:block>
         </table>
-        <a sec:authorize="hasAnyRole('ROOT','ADMIN')" th:href="@{'/addSection?courseNum='+ ${course.getCourseNumber()}}" style="float: right;margin-top: 10px;">
+        <a sec:authorize="hasAnyRole('ROOT','ADMIN')" th:href="@{'/addSection?courseId='+ ${course.getCourseid()}}" style="float: right;margin-top: 10px;">
             <button class="btn btn-outline-primary mb-2">Add Section</button>
         </a>
     </div>

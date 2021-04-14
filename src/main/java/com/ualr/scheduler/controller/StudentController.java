@@ -49,7 +49,7 @@ public class StudentController {
         for (Schedule schedule: registration.getSchedules()){
             ArrayList<Section> sections = new ArrayList<>();
             for(int i=0;i<schedule.getSections().length();i+=5){
-                sections.add(sectionRepository.findBySectionNumber(schedule.getSections().substring(i,i+3)));
+                sections.add(sectionRepository.findBySectionid(Long.decode(schedule.getSections().substring(i,i+3))));
             }
             scheduling.put(schedule.getScheduleName(),sections);
         }
@@ -63,14 +63,14 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/addPCourse",method = {RequestMethod.POST,RequestMethod.GET})
-    public ModelAndView addPossibleCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+    public ModelAndView addPossibleCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         Set<Course> possibleCourses = registration.getPossibleCourses();
-        String[] courseNums = courseNum.split(",");
-        for (String courseNo:courseNums) {
-            Course course = coursesRepository.findByCourseNumber(Long.decode(courseNo));
+        String[] courseIds = courseId.split(",");
+        for (String courseID:courseIds) {
+            Course course = coursesRepository.findByCourseid(Long.decode(courseID));
             possibleCourses.add(course);
         }
         modelAndView.addObject("message","The courses have been added to the possible courses list");
@@ -81,12 +81,12 @@ public class StudentController {
 
     //@PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/deletePCourse",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView deletePossibleCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+    public ModelAndView deletePossibleCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         Set<Course> possibleCourses = registration.getPossibleCourses();
-        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+        Course course = coursesRepository.findByCourseid(Long.decode(courseId));
         possibleCourses.remove(course);
         modelAndView.addObject("message","The course has been removed from the possible courses list");
         modelAndView.setViewName("courseRequest");
@@ -96,14 +96,14 @@ public class StudentController {
 
     //@PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/addDCourse",method = {RequestMethod.POST,RequestMethod.GET})
-    public ModelAndView addDesignatedCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+    public ModelAndView addDesignatedCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         Set<Course> designatedCourses = registration.getDesignatedCourses();
-        String[] courseNums = courseNum.split(",");
-        for (String courseNo:courseNums) {
-            Course course = coursesRepository.findByCourseNumber(Long.decode(courseNo));
+        String[] courseIds = courseId.split(",");
+        for (String courseID:courseIds) {
+            Course course = coursesRepository.findByCourseid(Long.decode(courseID));
             designatedCourses.add(course);
         }
         modelAndView.addObject("message","The courses have been added to the designated courses list");
@@ -114,12 +114,12 @@ public class StudentController {
 
     //@PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/deleteDCourse",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView deleteDesignatedCourse(ModelAndView modelAndView, @RequestParam("courseNum")String courseNum){
+    public ModelAndView deleteDesignatedCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
         Set<Course> designatedCourses = registration.getDesignatedCourses();
-        Course course = coursesRepository.findByCourseNumber(Long.decode(courseNum));
+        Course course = coursesRepository.findByCourseid(Long.decode(courseId));
         designatedCourses.remove(course);
         modelAndView.addObject("message","The course has been removed from the designated courses list");
         modelAndView.setViewName("courseRequest");
@@ -281,20 +281,22 @@ public class StudentController {
             }
         }
         if (sectionTime){
-            schedule += (section.getSectionNumber().toString() + ", ");
+            schedule += (section.getSectionid().toString() + ", ");
         }
         for (Section possibleSection: sections){
             Set<Section> scheduledSections = new HashSet<>();
-            for (int i =0;i<schedule.length();i+=5){
-                scheduledSections.add(sectionRepository.findBySectionNumber(schedule.substring(i,i+3)));
+            String[] tokens = schedule.split(",");
+            for (String t: tokens){
+                if (t.trim().length() > 0) {
+                    scheduledSections.add(sectionRepository.findBySectionid(Long.decode(t.trim())));
+                }
             }
-            if (schedule.indexOf(possibleSection.getSectionNumber().toString()) == -1){
+            if (schedule.indexOf(possibleSection.getSectionid().toString()) == -1){
                 boolean courseNotIn = true;
                 for (Section ssection: scheduledSections){
-                    if (possibleSection.getCourses().getCourseNumber() == ssection.getCourses().getCourseNumber()){
+                    if (possibleSection.getCourses().getCourseid() == ssection.getCourses().getCourseid()){
                         courseNotIn = false;
                     }
-
                 }
                 if (courseNotIn){
                     sectionTime = true;
@@ -327,7 +329,7 @@ public class StudentController {
                         }
                     }
                     if (sectionTime) {
-                        schedule+=(possibleSection.getSectionNumber().toString()+", ");
+                        schedule+=(possibleSection.getSectionid().toString()+", ");
                     }
                 }
             }

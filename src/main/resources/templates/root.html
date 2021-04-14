@@ -5,9 +5,28 @@
     <meta charset="UTF-8">
     <title>Root</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/root.css}"/>
 </head>
 <body>
+    <script>
+        var $table = $('table.b'),
+            $bodyCells = $table.find('tbody tr:first').children(),
+            colWidth;
+
+        // Adjust the width of thead cells when window resizes
+        $(window).resize(function() {
+            // Get the tbody columns width array
+            colWidth = $bodyCells.map(function() {
+                return $(this).width();
+            }).get();
+
+            // Set the width of thead columns
+            $table.find('thead tr').children().each(function(i, v) {
+                $(v).width(colWidth[i]);
+            });
+        }).resize(); // Trigger resize handler
+    </script>
     <div class="header">
         <div class="logo"><img th:src="@{/img/icon.svg}"></div>
         <h1>Wossomotta University</h1>
@@ -20,15 +39,16 @@
    <div class="main">
        <div class="column">
            <h2>Active Request Queue</h2>
-           <table class="b">
-               <tbody>
+           <table class="b" th:if="${requests.size() > 0}">
+               <thead>
                <tr>
                    <th>Username</th>
                    <th>Access Level</th>
                    <th></th>
                    <th></th>
-                   <th></th>
                </tr>
+               </thead>
+               <tbody>
                <th:block th:each="request: ${requests}">
                    <tr>
                        <td th:text="${request.getUsername()}"></td>
@@ -40,7 +60,7 @@
                        </td>
                        <td>
                            <a th:href="@{'/delete?username=' + ${request.getUsername()}}">
-                               <button class="button">DECLINE</button>
+                               <button class="deletebtn">DECLINE</button>
                            </a>
                        </td>
                    </tr>
@@ -53,35 +73,45 @@
        </div>
        <div class="second">
            <h2>Course Catalog</h2>
-           <table class="b">
-                <tbody>
+           <table class="scroll">
+                <thead>
                 <tr>
-                    <th>Dept. Id</th>
-                    <th>Course Number</th>
-                    <th>Course Title</th>
-                    <th></th>
-                    <th></th>
+                    <th style="width: 18.5%">Dept. Id</th>
+                    <th style="width: 18.5%">Course Number</th>
+                    <th style="width: 22%">Course Title</th>
+                    <th style="width: 20%"></th>
+                    <th style="width: 20%"></th>
                 </tr>
+                </thead>
+               <tbody>
                 <th:block th:each="course: ${courses}">
                     <tr>
                         <td th:text="${course.getDeptId()}"></td>
                         <td th:text="${course.getCourseNumber()}"></td>
-                        <td><a th:href="@{'/course?courseNum=' + ${course.getCourseNumber()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none;"></a></td>
+                        <td><a th:href="@{'/course?courseId=' + ${course.getCourseid()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none;"></a></td>
                         <td>
                             <a th:href="@{'/editCourse?courseNum=' + ${course.getCourseNumber()}}">
                                 <button class="button">EDIT</button>
                             </a>
                         </td>
                         <td>
-                            <a th:href="@{'/deleteCourse?courseNum=' + ${course.getCourseNumber()}}">
-                                <button class="button">DELETE</button>
+                            <a th:href="@{'/deleteCourse?courseId=' + ${course.getCourseid()}}">
+                                <button class="deletebtn">DELETE</button>
                             </a>
                         </td>
                     </tr>
                 </th:block>
-                </tbody>
+               </tbody>
            </table>
-           <button th:href="@{'/addCourse'}" class="button addcourse">ADD COURSE</button>
+           <a th:href="@{'/addCourse'}">
+               <button  class="button addcourse">ADD COURSE</button>
+           </a>
+           <a th:href="@{'/uploadCourseFile'}">
+               <button  class="button upload">UPLOAD COURSE FILE</button>
+           </a>
+           <a th:href="@{'/uploadSectionFile'}">
+               <button  class="button upload">UPLOAD SECTION FILE</button>
+           </a>
        </div>
    </div>
 
