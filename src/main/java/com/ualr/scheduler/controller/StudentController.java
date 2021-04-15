@@ -46,12 +46,14 @@ public class StudentController {
         Set<ReservedTime> reservedTimes = registration.getReservedTimes();
         List<Course> courses = coursesRepository.findAll();
         Map<String,ArrayList<Section>> scheduling = new HashMap<>();
+        int j = 1;
         for (Schedule schedule: registration.getSchedules()){
             ArrayList<Section> sections = new ArrayList<>();
             for(int i=0;i<schedule.getSections().length();i+=5){
                 sections.add(sectionRepository.findBySectionid(Long.decode(schedule.getSections().substring(i,i+3))));
             }
-            scheduling.put(schedule.getScheduleName(),sections);
+            scheduling.put(("Schedule " + Integer.toString(j)),sections);
+            j++;
         }
         modelAndView.addObject("courses",courses);
         modelAndView.addObject("possibleCourses",possibleCourses);
