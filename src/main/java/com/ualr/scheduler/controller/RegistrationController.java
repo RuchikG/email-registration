@@ -6,8 +6,6 @@ import com.ualr.scheduler.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.UUID;
@@ -100,7 +97,7 @@ public class RegistrationController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ROOT')")
+    @PreAuthorize("hasAnyRole('ROOT')")
     @RequestMapping(value = "/activate",method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView confirmation(ModelAndView modelAndView, @RequestParam("username")String username){
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
@@ -126,7 +123,7 @@ public class RegistrationController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ROOT')")
+    @PreAuthorize("hasAnyRole('ROOT')")
     @RequestMapping(value = "/delete",method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView deletion(ModelAndView modelAndView, @RequestParam("username")String username){
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);

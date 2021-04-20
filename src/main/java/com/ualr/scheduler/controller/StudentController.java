@@ -2,13 +2,11 @@ package com.ualr.scheduler.controller;
 
 import com.ualr.scheduler.model.*;
 import com.ualr.scheduler.repository.*;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +33,7 @@ public class StudentController {
     @Autowired
     SectionRepository sectionRepository;
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/student",method = RequestMethod.GET)
     public ModelAndView studentPage(ModelAndView modelAndView){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -45,14 +43,14 @@ public class StudentController {
         Set<Course> possibleCourses = registration.getPossibleCourses();
         Set<ReservedTime> reservedTimes = registration.getReservedTimes();
         List<Course> courses = coursesRepository.findAll();
-        Map<String,ArrayList<Section>> scheduling = new HashMap<>();
+        Map<String,ArrayList<Section>> scheduling = new LinkedHashMap<>();
         int j = 1;
         for (Schedule schedule: registration.getSchedules()){
             ArrayList<Section> sections = new ArrayList<>();
             for(int i=0;i<schedule.getSections().length();i+=5){
                 sections.add(sectionRepository.findBySectionid(Long.decode(schedule.getSections().substring(i,i+3))));
             }
-            scheduling.put(("Schedule " + Integer.toString(j)),sections);
+            scheduling.put(("Schedule " + (j)),sections);
             j++;
         }
         modelAndView.addObject("courses",courses);
@@ -64,6 +62,7 @@ public class StudentController {
         return modelAndView;
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/addPCourse",method = {RequestMethod.POST,RequestMethod.GET})
     public ModelAndView addPossibleCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -81,7 +80,7 @@ public class StudentController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/deletePCourse",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView deletePossibleCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -96,7 +95,7 @@ public class StudentController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/addDCourse",method = {RequestMethod.POST,RequestMethod.GET})
     public ModelAndView addDesignatedCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -114,7 +113,7 @@ public class StudentController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/deleteDCourse",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView deleteDesignatedCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -129,7 +128,7 @@ public class StudentController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/addReserve", method = RequestMethod.GET)
     public ModelAndView addingReserveTime(ModelAndView modelAndView, ReservedTime reservedTime){
         modelAndView.setViewName("addReserveTime");
@@ -137,7 +136,7 @@ public class StudentController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/addReserve", method = RequestMethod.POST)
     public ModelAndView addReserveTime(ModelAndView modelAndView, ReservedTime reservedTime){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -172,7 +171,7 @@ public class StudentController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/editReserve",method = RequestMethod.GET)
     public ModelAndView displayEditReserveTime(ModelAndView modelAndView, @RequestParam("id")String id){
         ReservedTime reservedTime = reservedTimeRepository.findByReservedtimeID(Long.decode(id));
@@ -181,7 +180,7 @@ public class StudentController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/editReserve",method = RequestMethod.POST)
     public ModelAndView editReserveTime(ModelAndView modelAndView, ReservedTime reservedTime){
         ReservedTime check = reservedTimeRepository.findByReservedtimeID(reservedTime.getReserved_timeID());
@@ -195,7 +194,7 @@ public class StudentController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping(value = "/deleteReserve", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView deleteReserve(ModelAndView modelAndView, @RequestParam("id")String id){
         ReservedTime reservedTime = reservedTimeRepository.findByReservedtimeID(Long.decode(id));
@@ -209,6 +208,8 @@ public class StudentController {
         reservedTimeRepository.delete(reservedTime);
         return modelAndView;
     }
+
+    @PreAuthorize("hasAnyRole('STUDENT')")
     @RequestMapping("/test")
     public ModelAndView test(ModelAndView modelAndView){
         Registration registration = registrationRepository.findByUsernameIgnoreCase("root");

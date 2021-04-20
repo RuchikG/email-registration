@@ -8,23 +8,8 @@
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/student.css}"/>
     <style>
-        body{
-            padding: 10px;
-        }
-        .tab{
-            border: 1px solid black;
-            column-gap: 120px;
-            padding: 10px;
-        }
-        .scheds{
-            border: 1px solid black;
-            column-gap: 120px;
-            margin-bottom: 30px;
-            padding: 10px;
-            width: 100%;
-        }
-
         input[type=checkbox]{
             transform: scale(1.5);
             margin-left: 10px;
@@ -33,10 +18,18 @@
 </head>
 <body>
 
-<a style="float: right; margin-right: 20px;" href="/logout">Logout</a>
+<div class="header">
+    <div class="logo"><img th:src="@{/img/icon.svg}"></div>
+    <h1>Wossomotta University</h1>
+</div>
+<div class="navigation">
+    <ul>
+        <li><a href="/logout">LOG OUT</a></li>
+    </ul>
+</div>
     <div>
-        <h6>Course Catalog:</h6>
-        <table class="tab" style="width: 100%">
+        <h4 style="margin: 10px">Course Catalog:</h4>
+        <table class="scrolling">
             <tr>
                 <th style="margin-left: 10px">Select</th>
                 <th>Dept. Id</th>
@@ -53,7 +46,7 @@
                 </tr>
             </th:block>
         </table>
-        <button class="btn btn-outline-primary mb-2 pcourse" style="float: right;margin-top: 10px;" onclick="">Add Possible Courses</button>
+        <button class="button pcourse" style="float: right;margin-top: 10px; margin-right: 10px;" onclick="">Add Possible Courses</button>
     </div>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -82,8 +75,8 @@
         })
     </script>
     <div style="margin-top: 80px;">
-        <h6>Possible Courses:</h6>
-        <table class="tab" style="width: 100%">
+        <h4 style="margin: 10px">Possible Courses:</h4>
+        <table class="scrolling">
             <tr>
                 <th style="margin-left: 10px">Select</th>
                 <th>Dept. Id</th>
@@ -100,17 +93,17 @@
                     <td><a th:href="@{'/course?courseId=' + ${pcourse.getCourseid()}}" th:text="${pcourse.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
                     <td>
                         <a th:href="@{'/deletePCourse?courseId=' + ${pcourse.getCourseid()}}">
-                            <button class="btn btn-danger mb-2">Delete</button>
+                            <button class="deletebtn">Delete</button>
                         </a>
                     </td>
                 </tr>
             </th:block>
         </table>
-        <button class="btn btn-outline-primary mb-2 dcourse" style="float: right;margin-top: 10px;" onclick="">Add Designated Courses</button>
+        <button class="button dcourse" style="float: right;margin-top: 10px;margin-right: 10px;" onclick="">Add Designated Courses</button>
     </div>
     <div style="margin-top: 80px;">
-        <h6>Designated Courses:</h6>
-        <table class="tab" style="width: 100%">
+        <h4 style="margin: 10px">Designated Courses:</h4>
+        <table class="scrollingd">
             <tr>
                 <th>Dept. Id</th>
                 <th>Course Number</th>
@@ -125,7 +118,7 @@
                     <td><a th:href="@{'/course?courseId=' + ${dcourse.getCourseid()}}" th:text="${dcourse.getCourseTitle()}" style="text-decoration: none; color: black"></a></td>
                     <td>
                         <a th:href="@{'/deleteDCourse?courseId=' + ${dcourse.getCourseid()}}">
-                            <button class="btn btn-danger mb-2">Delete</button>
+                            <button class="deletebtn">Delete</button>
                         </a>
                     </td>
                 </tr>
@@ -133,8 +126,8 @@
         </table>
     </div>
     <div style="margin-top: 80px;">
-        <h6>Reserved Times:</h6>
-        <table class="tab" style="width: 100%">
+        <h4 style="margin: 10px">Reserved Times:</h4>
+        <table class="scrollingr">
             <tr>
                 <th>Day</th>
                 <th>Start Time</th>
@@ -152,26 +145,26 @@
                     <td th:text="${reserveTime.getDescription()}"></td>
                     <td>
                         <a th:href="@{'/editReserve?id=' + ${reserveTime.getReserved_timeID()}}">
-                            <button class="btn btn-primary mb-2">Edit</button>
+                            <button class="button">Edit</button>
                         </a>
                     </td>
                     <td>
                         <a th:href="@{'/deleteReserve?id=' + ${reserveTime.getReserved_timeID()}}">
-                            <button class="btn btn-danger mb-2">Delete</button>
+                            <button class="deletebtn">Delete</button>
                         </a>
                     </td>
                 </tr>
             </th:block>
         </table>
-        <a th:href="@{'/addReserve'}" style="float: right;margin-top: 10px;">
-            <button class="btn btn-outline-primary mb-2">Add Reserve Time</button>
+        <a th:href="@{'/addReserve'}" style="float: right;margin-top: 10px; margin-right: 10px">
+            <button class="button">Add Reserve Time</button>
         </a>
     </div>
     <div style="margin-top: 80px">
-        <h6 style="margin-bottom: 20px">Schedules: </h6>
+        <h4 style="margin: 10px">Schedules: </h4>
         <th:block th:each="schedule: ${scheduling.keySet()}">
-            <h6 th:text="${schedule}" style="font-weight: bold"> </h6>
-            <table class="scheds">
+            <h6 th:text="${schedule}" style="font-weight: bold; margin-top: 10px; margin-left: 10px"> </h6>
+            <table class="scrollings">
                 <tr>
                     <th>Course Name</th>
                     <th>Instructor</th>
@@ -192,8 +185,8 @@
                 </th:block>
             </table>
         </th:block>
-        <a th:href="@{'/generateSchedules'}" style="float: right;margin-top: 10px; margin-bottom: 40px">
-            <button class="btn btn-outline-primary mb-2">Generate Schedules</button>
+        <a th:href="@{'/generateSchedules'}" style="float: right;margin-right: 10px; margin-bottom: 40px">
+            <button class="button">Generate Schedules</button>
         </a>
     </div>
 </body>

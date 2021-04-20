@@ -1,6 +1,6 @@
 package com.ualr.scheduler.model;
+
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class MeetingTimes {

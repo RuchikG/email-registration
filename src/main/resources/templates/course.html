@@ -6,15 +6,10 @@
 <head>
     <title>View Course</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/course.css}"/>
     <style>
-        body{
-            padding: 10px;
-        }
-        .tab{
-            border: 1px solid black;
-            column-gap: 120px;
-            padding: 10px;
-        }
         p{
             display: flex;
             justify-content: space-between;
@@ -23,38 +18,54 @@
     </style>
 </head>
 <body>
-    <a style="float: right;margin-right: 20px;" href="/logout">Logout</a>
+<div class="header">
+    <div class="logo"><img th:src="@{/img/icon.svg}"></div>
+    <h1>Wossomotta University</h1>
+</div>
+<div class="navigation">
+    <ul>
+        <li><a href="/logout">LOG OUT</a></li>
+    </ul>
+</div>
     <div>
-        <h6 th:text="'Dept. Id: ' + ${course.getDeptId()} "></h6>
-        <h6 th:text="'Course No: ' + ${course.getCourseNumber()} "></h6>
-        <h6 th:text="'Course Title: ' + ${course.getCourseTitle()} "></h6>
-        <table class="tab" style="width: 100%">
+        <h6 th:text="'Dept. Id: ' + ${course.getDeptId()} " style="margin-left: 10px; margin-top: 10px; color: #DAA520; font-weight: bold"></h6>
+        <h6 th:text="'Course No: ' + ${course.getCourseNumber()} " style="margin-left: 10px; color: #DAA520; font-weight: bold"></h6>
+        <h6 th:text="'Course Title: ' + ${course.getCourseTitle()} " style="margin-left: 10px; color: #DAA520; font-weight: bold"></h6>
+        <table class="scrolling" id="myTable">
             <tr>
                 <th>Section No</th>
                 <th>Instructor</th>
                 <th sec:authorize="hasAnyRole('ROOT','ADMIN')"></th>
                 <th sec:authorize="hasAnyRole('ROOT','ADMIN')"></th>
             </tr>
-
             <th:block th:each="section: ${sections}">
                 <tr>
                     <td><a th:href="@{'/section?sectionId=' + ${section.getSectionid()}}" th:text="${section.getSectionNumber()}" style="text-decoration: none; color: black"></a></td>
                     <td th:text="${section.getInstructor()}"></td>
                     <td sec:authorize="hasAnyRole('ROOT','ADMIN')">
                         <a th:href="@{'/editSection?sectionId=' + ${section.getSectionid()}}">
-                            <button class="btn btn-primary mb-2">Edit</button>
+                            <button class="button">Edit</button>
                         </a>
                     </td>
                     <td sec:authorize="hasAnyRole('ROOT','ADMIN')">
                         <a th:href="@{'/deleteSection?sectionId=' + ${section.getSectionid()}}">
-                            <button class="btn btn-danger mb-2">Delete</button>
+                            <button class="deletebtn">Delete</button>
                         </a>
                     </td>
                 </tr>
             </th:block>
         </table>
-        <a sec:authorize="hasAnyRole('ROOT','ADMIN')" th:href="@{'/addSection?courseId='+ ${course.getCourseid()}}" style="float: right;margin-top: 10px;">
-            <button class="btn btn-outline-primary mb-2">Add Section</button>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var table = document.getElementById("myTable");
+                if (table.rows[0].cells.length <= 2) {
+                    table.classList.remove("scrolling");
+                    table.classList.add("scrollingq");
+                }
+            });
+        </script>
+        <a sec:authorize="hasAnyRole('ROOT','ADMIN')" th:href="@{'/addSection?courseId='+ ${course.getCourseid()}}" style="float: right;margin-top: 10px; margin-right: 10px">
+            <button class="button">Add Section</button>
         </a>
     </div>
 </body>

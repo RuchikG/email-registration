@@ -38,7 +38,7 @@ public class AdminController {
     @Autowired
     private SectionRepository sectionRepository;
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/admin",method = RequestMethod.GET)
     public ModelAndView adminUserPage(ModelAndView modelAndView){
         List<Course> courses = coursesRepository.findAll();
@@ -47,7 +47,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/addCourse",method = RequestMethod.GET)
     public ModelAndView displayAddCourse(ModelAndView modelAndView, Course course){
         modelAndView.addObject("course",course);
@@ -55,7 +55,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/addCourse",method = RequestMethod.POST)
     public ModelAndView addCourse(ModelAndView modelAndView, Course course){
         coursesRepository.save(course);
@@ -64,7 +64,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/editCourse",method = RequestMethod.GET)
     public ModelAndView displayEditCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Course course = coursesRepository.findByCourseid(Long.decode(courseId));
@@ -73,7 +73,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/editCourse",method = RequestMethod.POST)
     public ModelAndView editCourse(ModelAndView modelAndView, Course course){
         Course check = coursesRepository.findByCourseid(course.getCourseid());
@@ -86,7 +86,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/deleteCourse", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView deleteCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Course course = coursesRepository.findByCourseid(Long.decode(courseId));
@@ -96,18 +96,27 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT','STUDENT')")
     @RequestMapping(value = "/course", method = RequestMethod.GET)
     public ModelAndView viewCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Course course = coursesRepository.findByCourseid(Long.decode(courseId));
-        Set<Section> sections = course.getSections();
+        ArrayList<Section> sections = new ArrayList<>();
+        int j = 0;
+        while(sections.size() != course.getSections().size()) {
+            for (Section s: course.getSections()) {
+                if (Integer.parseInt(s.getSectionNumber()) == (j+1)){
+                    sections.add(s);
+                    j++;
+                }
+            }
+        }
         modelAndView.addObject("course",course);
         modelAndView.addObject("sections",sections);
         modelAndView.setViewName("course");
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/addSection",method = RequestMethod.GET)
     public ModelAndView displayAddSection(ModelAndView modelAndView, @RequestParam("courseId")String courseId,Section section){
         section.setCourses(new Course());
@@ -118,7 +127,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/addSection",method = RequestMethod.POST)
     public ModelAndView addSection(ModelAndView modelAndView, Section section){
         Long courseId = section.getCourses().getCourseid();
@@ -130,7 +139,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/editSection",method = RequestMethod.GET)
     public ModelAndView displayEditSection(ModelAndView modelAndView, @RequestParam("sectionId")String sectionId){
         Section section = sectionRepository.findBySectionid(Long.decode(sectionId));
@@ -139,7 +148,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/editSection",method = RequestMethod.POST)
     public ModelAndView editSection(ModelAndView modelAndView, Section section){
         Section check = sectionRepository.findBySectionid(section.getSectionid());
@@ -151,7 +160,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/deleteSection", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView deleteSection(ModelAndView modelAndView, @RequestParam("sectionId")String sectionId){
         Section section = sectionRepository.findBySectionid(Long.decode(sectionId));
@@ -162,7 +171,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT','STUDENT')")
     @RequestMapping(value = "/section", method = RequestMethod.GET)
     public ModelAndView viewSection(ModelAndView modelAndView, @RequestParam("sectionId")String sectionId){
         Section section = sectionRepository.findBySectionid(Long.decode(sectionId));
@@ -173,7 +182,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/addMeetingtime",method = RequestMethod.GET)
     public ModelAndView displayAddMeetingTime(ModelAndView modelAndView,@RequestParam("sectionId")String sectionId, MeetingTimes meetingTimes){
         meetingTimes.setSections(new Section());
@@ -183,7 +192,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/addMeetingtime",method = RequestMethod.POST)
     public ModelAndView addMeetingTime(ModelAndView modelAndView, MeetingTimes meetingTimes){
         Long sectionid = meetingTimes.getSections().getSectionid();
@@ -197,7 +206,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/editMeetingtime",method = RequestMethod.GET)
     public ModelAndView displayEditMeetingTime(ModelAndView modelAndView, @RequestParam("meetingId")String meetingId){
         MeetingTimes meetingTimes = meetingtimeRepository.findByMeetingId(Long.decode(meetingId));
@@ -206,7 +215,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/editMeetingtime",method = RequestMethod.POST)
     public ModelAndView editMeetingTime(ModelAndView modelAndView, MeetingTimes meetingTimes){
         MeetingTimes check = meetingtimeRepository.findByMeetingId(meetingTimes.getMeetingId());
@@ -219,7 +228,7 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/deleteMeetingtime", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView deleteMeetingTime(ModelAndView modelAndView, @RequestParam("meetingId")String meetingId){
         MeetingTimes meetingTimes = meetingtimeRepository.findByMeetingId(Long.decode(meetingId));
@@ -230,14 +239,14 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/uploadCourseFile", method = RequestMethod.GET)
     public ModelAndView displayFileUpload(ModelAndView modelAndView){
         modelAndView.setViewName("courseFileUpload");
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/uploadCourseFile", method = RequestMethod.POST)
     public ModelAndView fileUploadCourse(ModelAndView modelAndView, @RequestParam("file") MultipartFile file){
         if (file.isEmpty()){
@@ -262,14 +271,14 @@ public class AdminController {
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/uploadSectionFile", method = RequestMethod.GET)
     public ModelAndView displaySectionUpload(ModelAndView modelAndView){
         modelAndView.setViewName("sectionFileUpload");
         return modelAndView;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROOT')")
     @RequestMapping(value = "/uploadSectionFile", method = RequestMethod.POST)
     public ModelAndView fileUploadSection(ModelAndView modelAndView, @RequestParam("file") MultipartFile file){
         if (file.isEmpty()){

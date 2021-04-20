@@ -22,7 +22,7 @@ public class RootController {
     @Autowired
     private RegistrationRepository registrationRepository;
 
-    //@PreAuthorize("hasAnyRole('ROOT')")
+    @PreAuthorize("hasAnyRole('ROOT')")
     @RequestMapping(value = "/root",method = RequestMethod.GET)
     public ModelAndView rootUserPage(ModelAndView modelAndView){
         List<Course> courses = coursesRepository.findAll();

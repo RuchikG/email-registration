@@ -6,15 +6,7 @@
 <head>
     <title>Admin</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
-    <style>
-        .tab{
-            border: 1px solid black;
-            column-gap: 120px;
-            padding: 10px;
-        }
-    </style>
     <meta charset="UTF-8">
-    <title>Root</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/admin.css}"/>
@@ -58,14 +50,14 @@
                 </tr>
             </th:block>
         </table>
-        <a th:href="@{'/addCourse'}">
-            <button  class="button addcourse">ADD COURSE</button>
+        <a th:href="@{'/uploadSectionFile'}">
+            <button  class="button addcourse">UPLOAD SECTION FILE</button>
         </a>
         <a th:href="@{'/uploadCourseFile'}">
             <button  class="button upload">UPLOAD COURSE FILE</button>
         </a>
-        <a th:href="@{'/uploadSectionFile'}">
-            <button  class="button upload">UPLOAD SECTION FILE</button>
+        <a th:href="@{'/addCourse'}">
+            <button  class="button upload">ADD COURSE</button>
         </a>
     </div>
 </body>
