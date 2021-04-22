@@ -47,8 +47,9 @@ public class StudentController {
         int j = 1;
         for (Schedule schedule: registration.getSchedules()){
             ArrayList<Section> sections = new ArrayList<>();
-            for(int i=0;i<schedule.getSections().length();i+=5){
-                sections.add(sectionRepository.findBySectionid(Long.decode(schedule.getSections().substring(i,i+3))));
+            String[] scheduledSections = schedule.getSections().split(",");
+            for(String s: scheduledSections){
+                sections.add(sectionRepository.findBySectionid(Long.decode(s.trim())));
             }
             scheduling.put(("Schedule " + (j)),sections);
             j++;
