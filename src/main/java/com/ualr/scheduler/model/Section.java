@@ -75,7 +75,13 @@ public class Section implements Comparable{
 
     @Override
     public int compareTo(Object o) {
-        int compareNum = Integer.parseInt(((Section) o).getSectionNumber());
-        return Integer.parseInt(this.sectionNumber) - compareNum;
+        if (this.sectionNumber.length() <= 2) {
+            o = (Section)o;
+            if (((Section) o).getSectionNumber().length() <= 2) {
+                int compareNum = Integer.parseInt(((Section) o).getSectionNumber());
+                return Integer.parseInt(this.sectionNumber) - compareNum;
+            }
+        }
+        return 0;
     }
 }
