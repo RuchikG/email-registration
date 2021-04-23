@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -100,8 +101,9 @@ public class AdminController {
     @RequestMapping(value = "/course", method = RequestMethod.GET)
     public ModelAndView viewCourse(ModelAndView modelAndView, @RequestParam("courseId")String courseId){
         Course course = coursesRepository.findByCourseid(Long.decode(courseId));
-        ArrayList<Section> sections = new ArrayList<>();
-        int j = 0;
+        ArrayList<Section> sections = new ArrayList<>(course.getSections());
+        Collections.sort(sections);
+       /* int j = 0;
         while(sections.size() != course.getSections().size()) {
             for (Section s: course.getSections()) {
                 if (Integer.parseInt(s.getSectionNumber()) == (j+1)){
@@ -109,7 +111,7 @@ public class AdminController {
                     j++;
                 }
             }
-        }
+        } */
         modelAndView.addObject("course",course);
         modelAndView.addObject("sections",sections);
         modelAndView.setViewName("course");

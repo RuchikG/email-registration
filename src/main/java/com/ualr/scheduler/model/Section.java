@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class Section {
+public class Section implements Comparable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,5 +71,11 @@ public class Section {
 
     public void setMeetingTime(Set<MeetingTimes> meetingTimes) {
         this.meetingTimes = meetingTimes;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        int compareNum = Integer.parseInt(((Section) o).getSectionNumber());
+        return Integer.parseInt(this.sectionNumber) - compareNum;
     }
 }
