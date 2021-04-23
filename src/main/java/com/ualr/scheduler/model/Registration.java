@@ -47,7 +47,7 @@ public class Registration {
     @OneToMany(mappedBy = "registration",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<ReservedTime> reservedTimes;
 
-    @OneToMany(mappedBy = "registration",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "registration",fetch = FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<Schedule> schedules;
 
     public Registration(Registration registration) {

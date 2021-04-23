@@ -227,9 +227,9 @@ public class StudentController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
-        scheduleRepository.deleteAll(registration.getSchedules());
-        Set<Schedule> schedules = new HashSet<>();
-        registration.setSchedules(schedules);
+        Set<Schedule> schedules = registration.getSchedules();
+        scheduleRepository.deleteAll();
+        schedules.clear();
         ArrayList<Section> designatedSections = new ArrayList<>();
         Set<Course> designatedCourses = registration.getDesignatedCourses();
         Set<ReservedTime> reservedTimes = registration.getReservedTimes();
@@ -251,9 +251,6 @@ public class StudentController {
                         newSchedule = false;
                     }
                 }
-            } else {
-                schedule.setSections(sections.substring(0, sections.length() - 2));
-                schedules.add(schedule);
             }
             if (newSchedule){
                 schedule.setSections(sections.substring(0, sections.length() - 2));
@@ -261,7 +258,6 @@ public class StudentController {
                 k++;
             }
         }
-        registration.setSchedules(schedules);
         registrationRepository.save(registration);
         modelAndView.addObject("message","Schedules are generated");
         modelAndView.setViewName("courseRequest");
