@@ -90,7 +90,7 @@
                         <td th:text="${course.getCourseNumber()}"></td>
                         <td><a th:href="@{'/course?courseId=' + ${course.getCourseid()}}" th:text="${course.getCourseTitle()}" style="text-decoration: none;"></a></td>
                         <td>
-                            <a th:href="@{'/editCourse?courseNum=' + ${course.getCourseNumber()}}">
+                            <a th:href="@{'/editCourse?courseId=' + ${course.getCourseNumber()}}">
                                 <button class="button">EDIT</button>
                             </a>
                         </td>
