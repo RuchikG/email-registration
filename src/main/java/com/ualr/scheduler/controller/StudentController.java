@@ -227,6 +227,9 @@ public class StudentController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Registration registration = registrationRepository.findByUsernameIgnoreCase(username);
+        scheduleRepository.deleteAll(registration.getSchedules());
+        Set<Schedule> schedules = new HashSet<>();
+        registration.setSchedules(schedules);
         ArrayList<Section> designatedSections = new ArrayList<>();
         Set<Course> designatedCourses = registration.getDesignatedCourses();
         Set<ReservedTime> reservedTimes = registration.getReservedTimes();
@@ -235,11 +238,10 @@ public class StudentController {
                 designatedSections.add(section);
             }
         }
-        Set<Schedule> schedules = registration.getSchedules();
         int k = 0;
         for (int i = 0;i<designatedSections.size();i++){
             Schedule schedule = new Schedule();
-            schedule.setScheduleName("schedule" + Integer.toString(k+1+schedules.size()));
+            schedule.setScheduleName("schedule" + Integer.toString(k+1));
             schedule.setRegistration(registration);
             String sections = scheduling(designatedSections,designatedSections.get(i),reservedTimes);
             boolean newSchedule = true;
