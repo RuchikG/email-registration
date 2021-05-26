@@ -1,9 +1,4 @@
 
-
-
-
-https://user-images.githubusercontent.com/51452855/119695086-74e8c500-be13-11eb-88ca-48170900bfca.mov
-
 # Scheduling System for Wossomotta University.
 
 There are 3 level of user access:
@@ -12,6 +7,8 @@ There are 3 level of user access:
 <li>They are able to approve requests of new root and admin users</li>
 <li>They are able to maintain course catalogs by manually maintaining a course </li>
 <li>They are able to upload course and section file to batch update course catalog </li>
+
+https://user-images.githubusercontent.com/51452855/119695086-74e8c500-be13-11eb-88ca-48170900bfca.mov
 
 
 <br /><strong>Second user level is admin user:</strong><br />
