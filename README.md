@@ -33,12 +33,12 @@ https://user-images.githubusercontent.com/51452855/119695086-74e8c500-be13-11eb-
 
 <strong>Root user login:</strong><br />
 <li>Username: root </li>
-<li>Password: root </li>
+<li>Password:  root </li>
 
 <br /><strong>Admin user login:</strong><br />
 <li>Username: admin </li>
-<li>Password: admin </li>
+<li>Password:  admin </li>
 
 <br /><strong>Student user login:</strong><br />
 <li>Username: student </li>
-<li>Password: student </li>
+<li>Password:  student </li>
