@@ -23,3 +23,8 @@ https://user-images.githubusercontent.com/51452855/119695086-74e8c500-be13-11eb-
 <li>They are able to maintain their reserved times for unavailability for classes </li>
 <li>They are able to auto-generate schedules based on designated courses around their reserved times </li>
 
+<br /><strong>To set this up locally:</strong><br />
+<li>Clone the repository locally</li>
+<li>Navigate to src/main/resources/application.sources file</li>
+<li>Update your file with database information and gmail authentication</li>
+<li>Run the application and open it at localhost:8080</li>
