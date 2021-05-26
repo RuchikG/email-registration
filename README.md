@@ -8,12 +8,12 @@ There are 3 level of user access:
 <li>They are able to upload course and section file to batch update course catalog </li>
 
 
-<strong>Second user level is admin user:</strong><br />
+<br /><strong>Second user level is admin user:</strong><br />
 <li>They are able to maintain course catalogs by manually maintaining a course</li>
 <li>They are able to upload course and section file to batch update course catalog </li>
 
 
-<strong>Final user level is student user:</strong><br />
+<br /><strong>Final user level is student user:</strong><br />
 <li>They are able to maintain possible courses from the course catalog </li>
 <li>They are able to maintain designated courses from their possible courses </li>
 <li>They are able to maintain their reserved times for unavailability for classes </li>
