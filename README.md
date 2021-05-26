@@ -8,6 +8,7 @@ There are 3 level of user access:
 <li>They are able to maintain course catalogs by manually maintaining a course </li>
 <li>They are able to upload course and section file to batch update course catalog </li>
 
+<br />
 https://user-images.githubusercontent.com/51452855/119695086-74e8c500-be13-11eb-88ca-48170900bfca.mov
 
 
