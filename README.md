@@ -3,12 +3,12 @@
 There are 3 level of user access:
 
 <strong>First user level is root user:</strong> <br />
-They are able to approve requests of new root and admin users <br />
+<li>They are able to approve requests of new root and admin users</li> <br />
 They are able to maintain course catalogs by manually maintaining a course <br />
 They are able to upload course and section file to batch update course catalog <br />
 
 
-Second user level is admin user:<br />
+<strong>Second user level is admin user:</strong><br />
 They are able to maintain course catalogs by manually maintaining a course <br />
 They are able to upload course and section file to batch update course catalog <br />
 
