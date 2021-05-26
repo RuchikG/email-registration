@@ -28,3 +28,9 @@ https://user-images.githubusercontent.com/51452855/119695086-74e8c500-be13-11eb-
 2. Navigate to src/main/resources/application.sources file<br />
 3. Update your file with database information and gmail authentication<br />
 4. Run the application and open it at localhost:8080<br />
+
+<strong>To test the live version visit: https://email-registration.herokuapp.com/ </strong><br />
+
+<strong>Student user login:</strong><br />
+<li>Username: student </li>
+<li>Password: student </li>
